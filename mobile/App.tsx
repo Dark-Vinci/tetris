@@ -1,0 +1,26 @@
+import { StyleSheet, Text, View } from 'react-native';
+import { JSX } from 'react';
+
+import { Screen } from '@components';
+
+function App(): JSX.Element {
+  return (
+    <View style={styles.container}>
+      <Screen>
+        <Text>Open up App.tsx to start working on your app!</Text>
+      </Screen>
+      <Text>Open up App.tsx to start working on your app!</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+export default App;
