@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/dark-vinci/tetris/backend/app"
+	"github.com/dark-vinci/tetris/backend/utils/middlewares"
 	"github.com/dark-vinci/tetris/backend/utils/models"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
@@ -9,16 +10,17 @@ import (
 )
 
 type userHandler struct {
-	logger *zerolog.Logger
-	app    *app.App
-	env    *models.Env
+	logger     *zerolog.Logger
+	app        *app.App
+	env        *models.Env
+	middleware middlewares.Middleware
 }
 
-func New(r *gin.RouterGroup, l *zerolog.Logger, a *app.App, e *models.Env) {
+func New(r *gin.RouterGroup, l *zerolog.Logger, a *app.App, e *models.Env, m middlewares.Middleware) {
 	user := userHandler{
-		logger: l,
-		app:    a,
-		env:    e,
+		app:        a,
+		env:        e,
+		middleware: m,
 	}
 
 	userGroup := r.Group("/user")

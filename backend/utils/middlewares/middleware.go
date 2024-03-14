@@ -12,7 +12,6 @@ import (
 )
 
 const (
-
 	// UserIDInContext context key holder
 	UserIDInContext = "user_id_in_context"
 

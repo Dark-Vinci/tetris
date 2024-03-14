@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"fmt"
-	"github.com/dark-vinci/tetris/backend/utils/models"
 	"net/http"
 	"strings"
 
@@ -10,9 +9,9 @@ import (
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-)
 
-const ZeroUUID = "00000000-0000-0000-0000-000000000000"
+	"github.com/dark-vinci/tetris/backend/utils/models"
+)
 
 // AuthMiddleware authenticates a restful api call and inject the userID and userType into to context
 func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
@@ -62,7 +61,7 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 		}
 
 		user, err := m.app.GetUser(c, uID)
-		if err != nil || strings.EqualFold(user.ID.String(), ZeroUUID) {
+		if err != nil || strings.EqualFold(user.ID.String(), models.ZeroUUID) {
 			models.ErrorResponse(c, http.StatusNotFound, models.ErrorData{
 				ID:            requestID,
 				Handler:       packageName,

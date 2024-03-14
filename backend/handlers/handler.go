@@ -4,6 +4,7 @@ import (
 	"github.com/dark-vinci/tetris/backend/app"
 	"github.com/dark-vinci/tetris/backend/handlers/game"
 	"github.com/dark-vinci/tetris/backend/handlers/user"
+	"github.com/dark-vinci/tetris/backend/utils/middlewares"
 	"github.com/dark-vinci/tetris/backend/utils/models"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
@@ -21,18 +22,19 @@ type Handler struct {
 	//utils       *utilsApp.Utils
 	//kyc         *kycApp.Kyc
 
-	//middleware middleware.Middleware
+	middleware middlewares.Middleware
 }
 
-func New(z *zerolog.Logger, a *app.App, env *models.Env, engine *gin.Engine) *Handler {
+func New(z *zerolog.Logger, a *app.App, env *models.Env, engine *gin.Engine, m middlewares.Middleware) *Handler {
 	log := z.With().Str("LogStrPackageLevel", "handler").Logger()
 	apiGroup := engine.Group("/tetris")
 
 	return &Handler{
-		app:    a,
-		logger: &log,
-		env:    env,
-		api:    apiGroup,
+		app:        a,
+		logger:     &log,
+		env:        env,
+		api:        apiGroup,
+		middleware: m,
 	}
 }
 
