@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { ReactNode, JSX } from 'react';
-import { StatusBar } from 'expo-status-bar';
+// import { StatusBar } from 'expo-status-bar';
 
 interface ScreenProps {
   readonly children: ReactNode;
@@ -10,7 +10,8 @@ interface ScreenProps {
 export function Screen({ children }: ScreenProps): JSX.Element {
   return (
     <SafeAreaView style={[screenStyle.container]}>
-      <StatusBar style="auto" />
+      {/*<StatusBar style='auto'/>*/}
+      {/*<SafeAreaViewBasezx/>*/}
       {children}
     </SafeAreaView>
   );
@@ -19,5 +20,12 @@ export function Screen({ children }: ScreenProps): JSX.Element {
 const screenStyle = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'aqua',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+    // borderStyle: 'solid',
+    // borderColor: 'yellow',
+    // borderWidth: 20
   },
 });

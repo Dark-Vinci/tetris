@@ -30,9 +30,14 @@
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
     "skipLibCheck": true,
+    "baseUrl": ".",
     "lib": ["es2022", "dom"],
     "paths": {
-      "@components": ["./src/Component"]
+      "@components": ["./src/Component"],
+      "@containers": ["./src/Containers"],
+      "@navigation": ["./src/Navigation"],
+      "@utils": ["./src/Utils"],
+      "@pages": ["./src/Pages"]
     }
   }
 }

@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
 
-interface BasicProps {
-  readonly children?: ReactNode;
+export interface BasicProps {
+  readonly children: ReactNode;
 }
