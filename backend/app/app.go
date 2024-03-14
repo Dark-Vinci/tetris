@@ -24,18 +24,16 @@ type Operations interface {
 }
 
 // New creates a new instance of App
-func New(e models.Env, s repository.Store, z zerolog.Logger) Operations {
+func New(e models.Env, s repository.Store, z zerolog.Logger) *App {
 	log := z.With().Str("APP_PACKAGE", "app").Logger()
 
 	uRepo := repository.NewUser(&s)
 	gRepo := repository.NewGame(&s)
 
-	app := &App{
+	return &App{
 		env:            e,
 		logger:         log,
 		userRepository: *uRepo,
 		gameRepository: *gRepo,
 	}
-
-	return Operations(app)
 }

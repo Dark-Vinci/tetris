@@ -1,12 +1,14 @@
 package game
 
 import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
+
 	"github.com/dark-vinci/tetris/backend/app"
 	"github.com/dark-vinci/tetris/backend/utils/middlewares"
 	"github.com/dark-vinci/tetris/backend/utils/models"
-	"github.com/gin-gonic/gin"
-	"github.com/rs/zerolog"
-	"net/http"
 )
 
 type gameHandler struct {

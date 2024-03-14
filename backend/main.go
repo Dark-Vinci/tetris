@@ -3,11 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"github.com/dark-vinci/tetris/backend/app"
-	"github.com/dark-vinci/tetris/backend/repository"
-	"github.com/dark-vinci/tetris/backend/utils/models"
-
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -18,6 +13,12 @@ import (
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
+
+	"github.com/dark-vinci/tetris/backend/app"
+	"github.com/dark-vinci/tetris/backend/handlers"
+	"github.com/dark-vinci/tetris/backend/repository"
+	"github.com/dark-vinci/tetris/backend/utils/middlewares"
+	"github.com/dark-vinci/tetris/backend/utils/models"
 )
 
 func GinContextToContextMiddleware() gin.HandlerFunc {
@@ -31,26 +32,7 @@ func GinContextToContextMiddleware() gin.HandlerFunc {
 func main() {
 	r := gin.New()
 
-	r.GET("/", func(c *gin.Context) {
-		//time.Sleep(5 * time.Second)
-		c.String(http.StatusOK, "Welcome Gin Server")
-	})
-
-	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
-	applicationLogger := logger.With().Str("TETRIS_API", "api").Logger()
-
-	e := models.Env{
-		DBPassword: "docker",
-		DBName:     "tetris",
-		DBUsername: "docker",
-		DBHOST:     "localhost",
-		DBPort:     "5420",
-	}
-
-	repo := repository.New(applicationLogger, e)
-
-	_ = app.New(e, *repo, logger)
-
+	//configure cors to allow request from any link
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowHeaders = []string{"*"}
 	corsConfig.AllowAllOrigins = true
@@ -59,6 +41,25 @@ func main() {
 	r.Use(GinContextToContextMiddleware())
 	r.Use(requestid.New())
 
+	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
+	appLogger := logger.With().Str("TETRIS_API", "api").Logger()
+
+	//create env
+	e := models.NewEnv()
+
+	//create repository
+	repo := repository.New(appLogger, *e)
+
+	//create app
+	a := app.New(*e, *repo, logger)
+	//create middleware
+	m := middlewares.NewMiddleware(logger, e, a)
+
+	//create handlers
+	h := handlers.New(&logger, a, e, r, *m)
+	//build project
+	h.Build()
+
 	srv := &http.Server{
 		Addr:    ":8080",
 		Handler: r,
@@ -66,7 +67,7 @@ func main() {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("listen: %s\n", err)
+			appLogger.Err(err).Msg("Listening error")
 		}
 	}()
 
@@ -74,13 +75,13 @@ func main() {
 
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
-	log.Println("Shutting down server...")
+	appLogger.Debug().Msg("Shutting down server...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server forced to shutdown: ", err)
+		appLogger.Err(err).Msg("Server forced to shutdown")
 	}
 
-	log.Println("Server exiting")
+	appLogger.Debug().Msg("Server exiting")
 }
