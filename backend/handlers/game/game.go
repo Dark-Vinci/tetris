@@ -1,11 +1,11 @@
 package game
 
 import (
-	"github.com/google/uuid"
 	"net/http"
 
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 

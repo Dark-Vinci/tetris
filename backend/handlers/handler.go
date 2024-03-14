@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
@@ -22,6 +24,7 @@ type Handler struct {
 
 func New(z *zerolog.Logger, a *app.App, env *models.Env, engine *gin.Engine, m middlewares.Middleware) *Handler {
 	log := z.With().Str("LogStrPackageLevel", "handler").Logger()
+
 	apiGroup := engine.Group("/tetris")
 
 	return &Handler{
@@ -37,7 +40,7 @@ func (h *Handler) Build() {
 	h.api.GET("/ping", func(c *gin.Context) {
 		requestID := requestid.Get(c)
 
-		c.JSON(200, struct {
+		c.JSON(http.StatusOK, struct {
 			Healthy   bool   `json:"healthy"`
 			RequestID string `json:"requestID"`
 		}{

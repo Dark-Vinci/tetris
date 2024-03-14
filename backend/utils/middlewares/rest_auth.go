@@ -61,7 +61,7 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		user, err := m.app.GetUser(c, uID)
+		user, err := m.app.GetUserByID(c, uID)
 		if err != nil || strings.EqualFold(user.ID.String(), helpers.ZeroUUID) {
 			models.ErrorResponse(c, http.StatusNotFound, models.ErrorData{
 				ID:      requestID,

@@ -15,13 +15,6 @@ import (
 	"github.com/dark-vinci/tetris/backend/utils/models"
 )
 
-var (
-	ErrRecordCreationFailed = errors.New("error: record creation failed")
-	ErrDeleteFailed         = errors.New("error: Delete failed")
-	ErrEmptyResult          = errors.New("error: could not find list of games")
-	ErrRecordNotFound       = errors.New("error: Record not found")
-)
-
 type GameRepo interface {
 	Create(ctx context.Context, u models.Game) (*models.Game, error)
 	GetAllGame(ctx context.Context, query models.Game, p helpers.Page) ([]*models.Game, helpers.PageInfo, error)
@@ -53,7 +46,7 @@ func (g *Game) GetByID(ctx context.Context, ID uuid.UUID) (*models.Game, error) 
 	db := g.storage.DB.WithContext(ctx).Where("id = ?", ID.String()).Find(&game)
 	if db.Error != nil || strings.EqualFold(game.ID.String(), helpers.ZeroUUID) {
 		log.Err(db.Error).Msg("record not found")
-		return nil, ErrRecordNotFound
+		return nil, helpers.ErrRecordNotFound
 	}
 	return &game, nil
 }
@@ -102,7 +95,7 @@ func (g *Game) GetAllGame(ctx context.Context, query models.Game, page helpers.P
 
 	if db.Error != nil {
 		log.Err(db.Error).Msg("could not fetch list of games")
-		return nil, helpers.PageInfo{}, ErrEmptyResult
+		return nil, helpers.PageInfo{}, helpers.ErrEmptyResult
 	}
 
 	return games, helpers.PageInfo{
@@ -124,7 +117,7 @@ func (g *Game) Create(ctx context.Context, game models.Game) (*models.Game, erro
 		if strings.Contains(db.Error.Error(), "duplicate key value") {
 			return nil, errors.New("duplicate record error")
 		}
-		return nil, ErrRecordCreationFailed
+		return nil, helpers.ErrRecordCreationFailed
 	}
 
 	return &game, nil
@@ -143,7 +136,7 @@ func (g *Game) SoftDeleteByID(ctx context.Context, id uuid.UUID) error {
 
 	if db.Error != nil {
 		log.Err(db.Error).Msg("soft delete failed")
-		return ErrDeleteFailed
+		return helpers.ErrDeleteFailed
 	}
 
 	return nil

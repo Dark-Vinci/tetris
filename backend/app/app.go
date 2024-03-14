@@ -2,12 +2,13 @@ package app
 
 import (
 	"context"
-	"github.com/dark-vinci/tetris/backend/utils/helpers"
+	"github.com/gin-gonic/gin"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
 	"github.com/dark-vinci/tetris/backend/repository"
+	"github.com/dark-vinci/tetris/backend/utils/helpers"
 	"github.com/dark-vinci/tetris/backend/utils/models"
 )
 
@@ -19,9 +20,10 @@ type App struct {
 }
 
 type Operations interface {
-	SignUp(ctx context.Context, user models.User) (*models.User, error)
-	GetUser(ctx context.Context, userID uuid.UUID) (*models.User, error)
-	CreateGame(ctx context.Context, user models.Game) (*models.Game, error)
+	GetUserByID(ctx *gin.Context, userID uuid.UUID) (*models.User, error)
+	CreateUser(ctx *gin.Context, userRequest models.CreateUserRequest) (*models.User, error)
+	Login(ctx *gin.Context, loginReq models.LoginRequest) (*models.User, error)
+	CreateGame(ctx context.Context, game models.Game) (*models.Game, error)
 	GetGames(ctx context.Context, page helpers.Page) ([]*models.Game, helpers.PageInfo, error)
 	GetUserGames(ctx context.Context, user uuid.UUID, page helpers.Page) ([]*models.Game, helpers.PageInfo, error)
 }

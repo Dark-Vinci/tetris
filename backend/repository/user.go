@@ -2,15 +2,25 @@ package repository
 
 import (
 	"context"
-	"github.com/dark-vinci/tetris/backend/utils/models"
+	"errors"
+	"fmt"
+	"strings"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
+	"gorm.io/gorm"
+
+	"github.com/dark-vinci/tetris/backend/utils/helpers"
+	"github.com/dark-vinci/tetris/backend/utils/models"
 )
 
 type UserRepo interface {
-	Create(ctx context.Context, u models.User) (*models.User, error)
-	Delete(ctx context.Context, userID uuid.UUID) error
-	GetUser(ctx context.Context, userID uuid.UUID) (*models.User, error)
+	CreateUser(ctx context.Context, user models.User) (*models.User, error)
+	GetUserByEmail(ctx context.Context, email string) (*models.User, error)
+	GetUserByID(ctx context.Context, userID uuid.UUID) (*models.User, error)
+	GetUserByUsername(ctx context.Context, username string) (*models.User, error)
+	GetAllUsers(ctx context.Context, query models.User, page helpers.Page) ([]*models.User, helpers.PageInfo, error)
 }
 
 type User struct {
@@ -29,14 +39,132 @@ func NewUser(s *Store) *UserRepo {
 	return &userDatabase
 }
 
-func (u *User) Delete(ctx context.Context, userID uuid.UUID) error {
+func (u *User) GetUserByUsername(ctx context.Context, username string) (*models.User, error) {
+	log := u.logger.With().Str(helpers.LogStrRequestIDLevel, u.storage.getRequestID(ctx)).
+		Str(helpers.LogStrKeyMethod, "repository.user.GetUserByUsername").Logger()
+
+	var user models.User
+	db := u.storage.DB.WithContext(ctx).Where("username = ?", username).First(&user)
+	if db.Error != nil || strings.EqualFold(user.ID.String(), helpers.ZeroUUID) {
+		log.Err(db.Error).Msg("user not found")
+		return nil, helpers.ErrRecordNotFound
+	}
+	return &user, nil
+}
+
+func (u *User) GetAllUsers(ctx context.Context, query models.User, page helpers.Page) ([]*models.User, helpers.PageInfo, error) {
+	log := u.logger.With().Str(helpers.LogStrRequestIDLevel, u.storage.getRequestID(ctx)).
+		Str(helpers.LogStrKeyMethod, "repository.user.GetAllUser").Logger()
+
+	var users []*models.User
+	offset := 0
+	// load defaults
+	if page.Number == nil {
+		tmpPageNumber := helpers.PageDefaultNumber
+		page.Number = &tmpPageNumber
+	}
+	if page.Size == nil {
+		tmpPageSize := helpers.PageDefaultSize
+		page.Size = &tmpPageSize
+	}
+	if page.SortBy == nil {
+		tmpPageSortBy := helpers.PageDefaultSortBy
+		page.SortBy = &tmpPageSortBy
+	}
+	if page.SortDirectionDesc == nil {
+		tmpPageSortDirectionDesc := helpers.PageDefaultSortDirectionDesc
+		page.SortDirectionDesc = &tmpPageSortDirectionDesc
+	}
+
+	if *page.Number > 1 {
+		offset = *page.Size * (*page.Number - 1)
+	}
+	sortDirection := helpers.PageSortDirectionDescending
+	if !*page.SortDirectionDesc {
+		sortDirection = helpers.PageSortDirectionAscending
+	}
+
+	queryDraft := u.storage.DB.WithContext(ctx).Model(models.User{}).Where(query)
+
+	// then do counting
+	var count int64
+	queryDraft.Count(&count)
+
+	db := queryDraft.Offset(offset).Limit(*page.Size).
+		Order(fmt.Sprintf("%s %s", *page.SortBy, sortDirection)).
+		Find(&users)
+
+	if db.Error != nil {
+		log.Err(db.Error).Msg("could not fetch list of users")
+		return nil, helpers.PageInfo{}, helpers.ErrEmptyResult
+	}
+
+	return users, helpers.PageInfo{
+		Page:            *page.Number,
+		Size:            *page.Size,
+		HasNextPage:     int64(offset+*page.Size) < count,
+		HasPreviousPage: *page.Number > 1,
+		TotalCount:      count,
+	}, nil
+}
+
+func (u *User) CreateUser(ctx context.Context, user models.User) (*models.User, error) {
+	log := u.logger.With().Str(helpers.LogStrRequestIDLevel, u.storage.getRequestID(ctx)).
+		Str(helpers.LogStrKeyMethod, "repository.user.Create").Logger()
+
+	db := u.storage.DB.WithContext(ctx).Model(&models.User{}).Create(&user)
+	if db.Error != nil {
+		log.Err(db.Error).Msg("unable to insert new row")
+		if strings.Contains(db.Error.Error(), "duplicate key value") {
+			return nil, errors.New("duplicate record error")
+		}
+		return nil, helpers.ErrRecordCreationFailed
+	}
+
+	return &user, nil
+}
+
+func (u *User) GetUserByID(ctx context.Context, userID uuid.UUID) (*models.User, error) {
+	log := u.logger.With().Str(helpers.LogStrRequestIDLevel, u.storage.getRequestID(ctx)).
+		Str(helpers.LogStrKeyMethod, "repository.user.GetUserByID").Logger()
+
+	var user models.User
+	db := u.storage.DB.WithContext(ctx).Where("id = ?", userID.String()).First(&user)
+	if db.Error != nil || strings.EqualFold(user.ID.String(), helpers.ZeroUUID) {
+		log.Err(db.Error).Msg("user not found")
+		return nil, helpers.ErrRecordNotFound
+	}
+	return &user, nil
+}
+
+func (u *User) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
+	log := u.logger.With().Str(helpers.LogStrRequestIDLevel, u.storage.getRequestID(ctx)).
+		Str(helpers.LogStrKeyMethod, "repository.user.GetUserByEmail").Logger()
+
+	var user models.User
+	db := u.storage.DB.WithContext(ctx).Where("email = ?", email).First(&user)
+	if db.Error != nil || strings.EqualFold(user.ID.String(), helpers.ZeroUUID) {
+		log.Err(db.Error).Msg("user not found")
+		return nil, helpers.ErrRecordNotFound
+	}
+	return &user, nil
+}
+
+func (u *User) SoftDeleteByID(ctx context.Context, id uuid.UUID) error {
+	log := u.logger.With().Str(helpers.LogStrRequestIDLevel, u.storage.getRequestID(ctx)).
+		Str(helpers.LogStrKeyMethod, "repository.user.SoftDeleteByID").Logger()
+
+	db := u.storage.DB.WithContext(ctx).Model(models.User{}).Where("id = ?", id.String()).UpdateColumns(models.User{
+		DeletedAt: &gorm.DeletedAt{
+			Time:  time.Now(),
+			Valid: true,
+		},
+	})
+
+	if db.Error != nil {
+		log.Err(db.Error).Msg("soft delete failed")
+		return helpers.ErrDeleteFailed
+	}
+
 	return nil
-}
-
-func (u *User) Create(ctx context.Context, user models.User) (*models.User, error) {
-	return nil, nil
-}
-
-func (u *User) GetUser(ctx context.Context, userID uuid.UUID) (*models.User, error) {
-	return nil, nil
 }

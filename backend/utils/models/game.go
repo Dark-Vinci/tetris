@@ -11,5 +11,5 @@ type Game struct {
 	Score     uint            `json:"score"`
 	UserID    uuid.UUID       `json:"userID"`
 	CreatedAt time.Time       `json:"createdAt"`
-	DeletedAt *gorm.DeletedAt `json:"deletedAt"`
+	DeletedAt *gorm.DeletedAt `json:"deletedAt,omitempty"`
 }
