@@ -17,17 +17,10 @@ import (
 	"github.com/dark-vinci/tetris/backend/app"
 	"github.com/dark-vinci/tetris/backend/handlers"
 	"github.com/dark-vinci/tetris/backend/repository"
+	"github.com/dark-vinci/tetris/backend/utils/helpers"
 	"github.com/dark-vinci/tetris/backend/utils/middlewares"
 	"github.com/dark-vinci/tetris/backend/utils/models"
 )
-
-func GinContextToContextMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		ctx := context.WithValue(c.Request.Context(), "TETRIS_API", c)
-		c.Request = c.Request.WithContext(ctx)
-		c.Next()
-	}
-}
 
 func main() {
 	r := gin.New()
@@ -38,7 +31,7 @@ func main() {
 	corsConfig.AllowAllOrigins = true
 
 	r.Use(cors.New(corsConfig), gin.Recovery())
-	r.Use(GinContextToContextMiddleware())
+	r.Use(helpers.GinContextToContextMiddleware())
 	r.Use(requestid.New())
 
 	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()

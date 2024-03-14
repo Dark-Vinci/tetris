@@ -2,10 +2,12 @@ package repository
 
 import (
 	"context"
-	"github.com/dark-vinci/tetris/backend/utils/helpers"
-	"github.com/dark-vinci/tetris/backend/utils/models"
+
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
+
+	"github.com/dark-vinci/tetris/backend/utils/helpers"
+	"github.com/dark-vinci/tetris/backend/utils/models"
 )
 
 type GameRepo interface {
@@ -37,6 +39,8 @@ func (u *Game) Delete(ctx context.Context, userID uuid.UUID) error {
 }
 
 func (u *Game) GetAllGame(ctx context.Context, p helpers.Page) ([]models.Game, helpers.PageInfo, error) {
+	_ = u.logger.With().Str(helpers.LogStrRequestIDLevel, u.storage.getRequestID(ctx)).
+		Str(helpers.LogStrKeyMethod, "store.CreateDeposit").Logger()
 	//return nil, nil
 	return []models.Game{}, helpers.PageInfo{}, nil
 }

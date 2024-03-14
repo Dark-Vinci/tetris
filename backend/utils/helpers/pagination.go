@@ -7,14 +7,19 @@ import (
 const (
 	// PageDefaultNumber int value 1
 	PageDefaultNumber int = 1
+
 	// PageDefaultSize int value 10
 	PageDefaultSize int = 10
+
 	// PageDefaultSortBy default sortBy string value
 	PageDefaultSortBy string = "created_at"
+
 	// PageDefaultSortDirectionDesc default sort direction descending order status
 	PageDefaultSortDirectionDesc bool = true
+
 	// PageSortDirectionAscending string value asc
 	PageSortDirectionAscending string = "asc"
+
 	// PageSortDirectionDescending string value desc
 	PageSortDirectionDescending string = "desc"
 )
@@ -60,6 +65,7 @@ func NewSinglePageWithDefaultSorting() Page {
 	s := math.MaxInt64
 	sortBy := "created_at"
 	sortDirectionDesc := false
+
 	return Page{
 		Number:            &n,
 		Size:              &s,

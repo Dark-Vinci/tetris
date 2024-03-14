@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 
+	"github.com/dark-vinci/tetris/backend/utils/helpers"
 	"github.com/dark-vinci/tetris/backend/utils/models"
 )
 
@@ -61,7 +62,7 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 		}
 
 		user, err := m.app.GetUser(c, uID)
-		if err != nil || strings.EqualFold(user.ID.String(), models.ZeroUUID) {
+		if err != nil || strings.EqualFold(user.ID.String(), helpers.ZeroUUID) {
 			models.ErrorResponse(c, http.StatusNotFound, models.ErrorData{
 				ID:            requestID,
 				Handler:       packageName,

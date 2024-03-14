@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"github.com/dark-vinci/tetris/backend/utils/helpers"
 	"github.com/dark-vinci/tetris/backend/utils/models"
 	"github.com/rs/zerolog"
 	"gorm.io/driver/postgres"
@@ -64,5 +65,5 @@ func (s *Store) getRequestID(ctx context.Context) string {
 		return rID.(string)
 	}
 
-	return "00000000-0000-0000-0000-000000000000"
+	return helpers.ZeroUUID
 }
