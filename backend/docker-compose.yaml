@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: ../postgres/Dockerfile
+    volumes:
+      - ../postgres/pgdata:/pgdata
+    ports:
+      - "5420:5432"
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - PGDATA=/pgdata
+
+#  backend:
+#    build:
+#      context: .
+#      dockerfile: ./Dockerfile
+#    env_file:
+#      - ./config.yaml
+#    volumes:
+#      - ./api:/go/src/github.com/ovalfi/api-service/api
+#      - ./sdk:/go/src/github.com/ovalfi/api-service/sdk
+#      - ./util:/go/src/github.com/ovalfi/api-service/util
+#    ports:
+#      - "2000:2000"
+#    depends_on:
+#      - account

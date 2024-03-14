@@ -3,6 +3,10 @@ package main
 import (
 	"context"
 	"errors"
+	"github.com/dark-vinci/tetris/backend/app"
+	"github.com/dark-vinci/tetris/backend/repository"
+	"github.com/dark-vinci/tetris/backend/utils/models"
+
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +17,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
 )
 
 func GinContextToContextMiddleware() gin.HandlerFunc {
@@ -30,6 +35,21 @@ func main() {
 		//time.Sleep(5 * time.Second)
 		c.String(http.StatusOK, "Welcome Gin Server")
 	})
+
+	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
+	applicationLogger := logger.With().Str("TETRIS_API", "api").Logger()
+
+	e := models.Env{
+		DBPassword: "docker",
+		DBName:     "tetris",
+		DBUsername: "docker",
+		DBHOST:     "localhost",
+		DBPort:     "5420",
+	}
+
+	repo := repository.New(applicationLogger, e)
+
+	_ = app.New(e, *repo, logger)
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowHeaders = []string{"*"}
