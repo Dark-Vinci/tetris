@@ -3,11 +3,13 @@ package repository
 import (
 	"context"
 	"fmt"
-	"github.com/dark-vinci/tetris/backend/utils/helpers"
-	"github.com/dark-vinci/tetris/backend/utils/models"
+
 	"github.com/rs/zerolog"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"github.com/dark-vinci/tetris/backend/utils/helpers"
+	"github.com/dark-vinci/tetris/backend/utils/models"
 )
 
 const (
@@ -38,13 +40,15 @@ func New(z zerolog.Logger, env models.Env) *Store {
 		&gorm.Config{},
 	)
 	if err != nil {
-		log.Fatal().Err(err)
+		z.Fatal().Err(err).Msg("could not connect to the DB")
 		panic(err)
 	}
-	z.Println("CONNECTED TO THE DB")
+
+	z.Debug().Msg("connected to the database")
 
 	err = db.AutoMigrate(&models.User{}, &models.Game{})
 	if err != nil {
+		z.Fatal().Err(err).Msg("unable to auto migrate models")
 		panic(err)
 	}
 

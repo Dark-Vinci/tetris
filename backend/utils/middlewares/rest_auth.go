@@ -22,18 +22,18 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 
 		if len(bearerToken) == 0 {
 			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
-				ID:            requestID,
-				Handler:       packageName,
-				Details:       ErrMissingToken.Error(),
+				ID:      requestID,
+				Handler: packageName,
+				//Details:       ErrMissingToken.Error(),
 				PublicMessage: "auth token is missing",
 			})
 			return
 		}
 		if !strings.HasPrefix(bearerToken, "Bearer ") {
 			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
-				ID:            requestID,
-				Handler:       packageName,
-				Details:       ErrInvalidTokenHeaderFormat.Error(),
+				ID:      requestID,
+				Handler: packageName,
+				//Details:       ErrInvalidTokenHeaderFormat.Error(),
 				PublicMessage: "auth token is invalid",
 			})
 			return
@@ -42,9 +42,9 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 		userID, isAdmin, err := m.ParseToken(m.env, strings.TrimPrefix(bearerToken, "Bearer "))
 		if err != nil {
 			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
-				ID:            requestID,
-				Handler:       packageName,
-				Details:       ErrInvalidToken.Error(),
+				ID:      requestID,
+				Handler: packageName,
+				//Details:       ErrInvalidToken.Error(),
 				PublicMessage: "token supplied is invalid/expired",
 			})
 			return
@@ -53,9 +53,9 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 		uID, err := uuid.Parse(userID)
 		if err != nil {
 			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
-				ID:            requestID,
-				Handler:       packageName,
-				Details:       ErrUnauthorized.Error(),
+				ID:      requestID,
+				Handler: packageName,
+				//Details:       ErrUnauthorized.Error(),
 				PublicMessage: "invalid user ID",
 			})
 			return
@@ -64,10 +64,10 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 		user, err := m.app.GetUser(c, uID)
 		if err != nil || strings.EqualFold(user.ID.String(), helpers.ZeroUUID) {
 			models.ErrorResponse(c, http.StatusNotFound, models.ErrorData{
-				ID:            requestID,
-				Handler:       packageName,
-				Details:       ErrUnauthorized.Error(),
-				PublicMessage: "no business found in this authorization context",
+				ID:      requestID,
+				Handler: packageName,
+				//Details:       ErrUnauthorized.Error(),
+				PublicMessage: "no user found in this authorization context",
 			})
 			return
 		}

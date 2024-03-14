@@ -35,7 +35,7 @@ func main() {
 	r.Use(requestid.New())
 
 	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
-	appLogger := logger.With().Str("TETRIS_API", "api").Logger()
+	appLogger := logger.With().Str("TETRIS", "api").Logger()
 
 	//create env
 	e := models.NewEnv()

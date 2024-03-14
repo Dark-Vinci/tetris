@@ -12,7 +12,6 @@ func GetStringPointer(val string) *string {
 type ErrorData struct {
 	ID            string `json:"id"`
 	Handler       string `json:"handler"`
-	Details       string `json:"details"`
 	PublicMessage string `json:"publicMessage"`
 }
 
