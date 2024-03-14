@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/google/uuid"
 	"net/http"
 
 	"github.com/gin-contrib/requestid"
@@ -34,7 +35,7 @@ func New(r *gin.RouterGroup, l *zerolog.Logger, a *app.App, e *models.Env, m mid
 	gameGroup := r.Group("/game")
 
 	gameGroup.POST("/", game.create())
-	gameGroup.GET("/my-games", game.getUserGames())
+	gameGroup.GET("/:user_id", game.getUserGames())
 	gameGroup.GET("/all", game.getAllGames())
 }
 
@@ -84,7 +85,32 @@ func (u *gameHandler) create() gin.HandlerFunc {
 
 func (u *gameHandler) getUserGames() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		models.OkResponse(c, http.StatusCreated, "User account created successfully!", "hello")
+		requestID := requestid.Get(c)
+		handlerNameAccount := c.FullPath()
+
+		pages := helpers.ParsePageParams(c)
+
+		//todo: extract from token
+		userID := c.Param("user_id")
+
+		uID, err := uuid.Parse(userID)
+		if err != nil {
+			u.logger.Err(err).Msg("unable to parse userID")
+			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameAccount,
+				PublicMessage: err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		res, pageInfo, err := u.app.GetUserGames(c, uID, pages)
+
+		models.OkResponse(c, http.StatusOK, "paginated ser games created successfully!", helpers.PaginatedResponse{
+			Items: res,
+			Page:  pageInfo,
+		})
 	}
 }
 
@@ -95,7 +121,7 @@ func (u *gameHandler) getAllGames() gin.HandlerFunc {
 
 		pages := helpers.ParsePageParams(c)
 
-		res, err := u.app.GetGames(c, pages)
+		res, pageInfo, err := u.app.GetGames(c, pages)
 		if err != nil {
 			u.logger.Err(err).Msg("something went wrong")
 			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
@@ -107,6 +133,10 @@ func (u *gameHandler) getAllGames() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		models.OkResponse(c, http.StatusOK, "Paginated games fetched successfully", res)
+
+		models.OkResponse(c, http.StatusOK, "Paginated games fetched successfully", helpers.PaginatedResponse{
+			Items: res,
+			Page:  pageInfo,
+		})
 	}
 }

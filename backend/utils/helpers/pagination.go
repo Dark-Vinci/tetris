@@ -59,6 +59,11 @@ func NewPageWithDefaultSorting(n int, s int) Page {
 	}
 }
 
+type PaginatedResponse struct {
+	Items interface{} `json:"items"`
+	Page  interface{} `json:"page"`
+}
+
 // NewSinglePageWithDefaultSorting creates a new pagination Page object with system default values
 func NewSinglePageWithDefaultSorting() Page {
 	n := 1

@@ -22,7 +22,8 @@ type Operations interface {
 	SignUp(ctx context.Context, user models.User) (*models.User, error)
 	GetUser(ctx context.Context, userID uuid.UUID) (*models.User, error)
 	CreateGame(ctx context.Context, user models.Game) (*models.Game, error)
-	GetGames(ctx context.Context, page helpers.Page) ([]*models.Game, error)
+	GetGames(ctx context.Context, page helpers.Page) ([]*models.Game, helpers.PageInfo, error)
+	GetUserGames(ctx context.Context, user uuid.UUID, page helpers.Page) ([]*models.Game, helpers.PageInfo, error)
 }
 
 // New creates a new instance of App
