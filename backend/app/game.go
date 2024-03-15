@@ -15,7 +15,7 @@ func (a *App) CreateGame(ctx *gin.Context, gameRequest models.CreateGameRequest)
 	requestID := requestid.Get(ctx)
 
 	log := a.logger.With().Str(helpers.LogStrRequestIDLevel, requestID).
-		Str(helpers.LogStrKeyMethod, "repository.game.CreateGame").Logger()
+		Str(helpers.LogStrKeyMethod, "app.game.CreateGame").Logger()
 
 	game := models.Game{
 		Score:     gameRequest.Score,
@@ -24,7 +24,6 @@ func (a *App) CreateGame(ctx *gin.Context, gameRequest models.CreateGameRequest)
 	}
 
 	games, err := a.gameRepository.Create(ctx, game)
-
 	if err != nil {
 		log.Err(err).Msg("could not create game")
 		return nil, err
@@ -40,7 +39,6 @@ func (a *App) GetGames(ctx *gin.Context, page helpers.Page) ([]*models.Game, hel
 		Str(helpers.LogStrKeyMethod, "app.game.GetGames").Logger()
 
 	games, pageInfo, err := a.gameRepository.GetAllGame(ctx, models.Game{}, page)
-
 	if err != nil {
 		log.Err(err).Msg("something went wrong")
 		return nil, pageInfo, err
@@ -56,7 +54,6 @@ func (a *App) GetUserGames(ctx *gin.Context, userID uuid.UUID, page helpers.Page
 		Str(helpers.LogStrKeyMethod, "app.game.GetUserGames").Logger()
 
 	games, pInfo, err := a.gameRepository.GetAllGame(ctx, models.Game{UserID: userID}, page)
-
 	if err != nil {
 		log.Err(err).Msg("something went wrong")
 		return nil, pInfo, err

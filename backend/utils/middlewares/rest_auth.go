@@ -15,25 +15,23 @@ import (
 )
 
 // AuthMiddleware authenticates a restful api call and inject the userID and userType into to context
-func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
+func (m *Middleware) AuthMiddleware(onlyAdmin bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		requestID := requestid.Get(c)
 		bearerToken := c.Request.Header.Get("Authorization")
 
 		if len(bearerToken) == 0 {
 			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
-				ID:      requestID,
-				Handler: packageName,
-				//Details:       ErrMissingToken.Error(),
+				ID:            requestID,
+				Handler:       packageName,
 				PublicMessage: "auth token is missing",
 			})
 			return
 		}
 		if !strings.HasPrefix(bearerToken, "Bearer ") {
 			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
-				ID:      requestID,
-				Handler: packageName,
-				//Details:       ErrInvalidTokenHeaderFormat.Error(),
+				ID:            requestID,
+				Handler:       packageName,
 				PublicMessage: "auth token is invalid",
 			})
 			return
@@ -41,10 +39,10 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 
 		userID, isAdmin, err := m.ParseToken(m.env, strings.TrimPrefix(bearerToken, "Bearer "))
 		if err != nil {
+			fmt.Println(err.Error())
 			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
-				ID:      requestID,
-				Handler: packageName,
-				//Details:       ErrInvalidToken.Error(),
+				ID:            requestID,
+				Handler:       packageName,
 				PublicMessage: "token supplied is invalid/expired",
 			})
 			return
@@ -53,9 +51,8 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 		uID, err := uuid.Parse(userID)
 		if err != nil {
 			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
-				ID:      requestID,
-				Handler: packageName,
-				//Details:       ErrUnauthorized.Error(),
+				ID:            requestID,
+				Handler:       packageName,
 				PublicMessage: "invalid user ID",
 			})
 			return
@@ -64,10 +61,19 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 		user, err := m.app.GetUserByID(c, uID)
 		if err != nil || strings.EqualFold(user.ID.String(), helpers.ZeroUUID) {
 			models.ErrorResponse(c, http.StatusNotFound, models.ErrorData{
-				ID:      requestID,
-				Handler: packageName,
-				//Details:       ErrUnauthorized.Error(),
+				ID:            requestID,
+				Handler:       packageName,
 				PublicMessage: "no user found in this authorization context",
+			})
+			return
+		}
+
+		//if only admin can reach and the user is not an admin
+		if onlyAdmin && !user.IsAdmin {
+			models.ErrorResponse(c, http.StatusForbidden, models.ErrorData{
+				ID:            requestID,
+				Handler:       packageName,
+				PublicMessage: "user is not an admin",
 			})
 			return
 		}

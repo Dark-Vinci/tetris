@@ -1,10 +1,13 @@
 package user
 
 import (
+	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
@@ -33,10 +36,93 @@ func New(r *gin.RouterGroup, l *zerolog.Logger, a *app.App, e *models.Env, m mid
 
 	userGroup := r.Group("/user")
 
-	userGroup.GET("/me", user.me())
 	userGroup.POST("/login", user.login())
 	userGroup.POST("/signup", user.signup())
-	userGroup.GET("/all", user.getUsers())
+	userGroup.POST("/refresh-token", user.refreshToken())
+
+	userGroup.GET("/me", m.AuthMiddleware(false), user.me())
+	userGroup.GET("/all", m.AuthMiddleware(true), user.getUsers())
+}
+
+func (u *userHandler) refreshToken() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var err error
+		var _ string
+		requestID := requestid.Get(c)
+
+		bearerToken := c.Request.Header.Get("Authorization")
+		if len(bearerToken) == 0 {
+			u.logger.Err(err).Msg("refresh token is missing in headers")
+			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: "refresh token is missing",
+			})
+			return
+		}
+
+		log.Info().Msg("payload received")
+		if !strings.HasPrefix(bearerToken, "Bearer ") {
+			log.Err(err).Msg("refresh token is invalid")
+			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: "refresh token is invalid",
+			})
+			return
+		}
+
+		// validate token
+		userUUID, err := u.middleware.ValidateRefreshToken(*u.logger, u.env, strings.TrimPrefix(bearerToken, "Bearer "))
+		if err != nil {
+			//errOccurred = true
+			u.logger.Err(err).Msg("RefreshToken::unable to validate refresh token")
+			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		// validate user
+		user, err := u.app.GetUserByID(c, *userUUID)
+		if err != nil {
+			//errOccurred = true
+			u.logger.Err(err).Msg("RefreshToken::unable to get user by ID")
+			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: err.Error(),
+			})
+			return
+		}
+
+		// create token
+		tokenDetails, err := u.middleware.CreateToken(c, u.env, user.ID.String(), user.IsAdmin)
+		if err != nil {
+			u.logger.Err(err).Msg("unable to generate new tokens")
+			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: err.Error(),
+			})
+			return
+		}
+
+		response := models.RefreshTokenResponse{
+			Request: models.Request{
+				RequestID: requestID,
+			},
+			AccessToken:        tokenDetails.AccessToken,
+			AccessTokenExpiry:  tokenDetails.AccessTokenExpiry,
+			RefreshToken:       tokenDetails.RefreshToken,
+			RefreshTokenExpiry: tokenDetails.RefreshTokenExpiry,
+		}
+
+		models.OkResponse(c, http.StatusOK, "token has been refreshed successfully!", response)
+	}
 }
 
 func (u *userHandler) signup() gin.HandlerFunc {
@@ -169,12 +255,73 @@ func (u *userHandler) login() gin.HandlerFunc {
 
 func (u *userHandler) me() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		models.OkResponse(c, http.StatusCreated, "User account created successfully!", "hello")
+		requestID := requestid.Get(c)
+		var err error
+
+		userID, ok := c.Get(middlewares.UserIDInContext)
+		if !ok {
+			err = errors.New("user not found")
+
+			u.logger.Err(errors.New("user not found")).Msg("unable to get user")
+			models.ErrorResponse(c, http.StatusUnprocessableEntity, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		uID, err := uuid.Parse(userID.(string))
+		if err != nil {
+			u.logger.Err(err).Msg("unable to get user")
+			models.ErrorResponse(c, http.StatusUnprocessableEntity, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		user, err := u.app.GetUserByID(c, uID)
+		if err != nil {
+			u.logger.Err(err).Msg("unable to get user by id")
+			models.ErrorResponse(c, http.StatusUnprocessableEntity, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		user.Password = helpers.StarPassword
+
+		models.OkResponse(c, http.StatusCreated, "User account fetched successfully!", user)
 	}
 }
 
 func (u *userHandler) getUsers() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		models.OkResponse(c, http.StatusCreated, "User account created successfully!", "hello")
+		requestID := requestid.Get(c)
+		pages := helpers.ParsePageParams(c)
+
+		users, pageInfo, err := u.app.GetUsers(c, pages)
+		if err != nil {
+			u.logger.Err(err).Msg("unable to fetch list of users")
+			models.ErrorResponse(c, http.StatusUnprocessableEntity, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		models.OkResponse(c, http.StatusOK, "paginated user list fetched successfully!", helpers.PaginatedResponse{
+			Items: users,
+			Page:  pageInfo,
+		})
 	}
 }

@@ -1,6 +1,7 @@
 package game
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-contrib/requestid"
@@ -34,8 +35,8 @@ func New(r *gin.RouterGroup, l *zerolog.Logger, a *app.App, e *models.Env, m mid
 
 	gameGroup := r.Group("/game")
 
-	gameGroup.POST("/", game.create())
-	gameGroup.GET("/:user_id", game.getUserGames())
+	gameGroup.POST("", game.create())
+	gameGroup.GET("", m.AuthMiddleware(false), game.getUserGames())
 	gameGroup.GET("/all", game.getAllGames())
 }
 
@@ -87,13 +88,25 @@ func (u *gameHandler) getUserGames() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		requestID := requestid.Get(c)
 		handlerNameAccount := c.FullPath()
+		var err error
 
 		pages := helpers.ParsePageParams(c)
 
-		//todo: extract from token
-		userID := c.Param("user_id")
+		userID, ok := c.Get(middlewares.UserIDInContext)
+		if !ok {
+			err = errors.New("game not found")
 
-		uID, err := uuid.Parse(userID)
+			u.logger.Err(errors.New("game not found")).Msg("unable to get game")
+			models.ErrorResponse(c, http.StatusUnprocessableEntity, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameAccount,
+				PublicMessage: err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		uID, err := uuid.Parse(userID.(string))
 		if err != nil {
 			u.logger.Err(err).Msg("unable to parse userID")
 			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
@@ -107,7 +120,7 @@ func (u *gameHandler) getUserGames() gin.HandlerFunc {
 
 		res, pageInfo, err := u.app.GetUserGames(c, uID, pages)
 
-		models.OkResponse(c, http.StatusOK, "paginated ser games created successfully!", helpers.PaginatedResponse{
+		models.OkResponse(c, http.StatusOK, "paginated user games fetched successfully!", helpers.PaginatedResponse{
 			Items: res,
 			Page:  pageInfo,
 		})

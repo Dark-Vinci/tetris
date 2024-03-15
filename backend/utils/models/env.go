@@ -20,7 +20,7 @@ func NewEnv() *Env {
 	os.Setenv("DB_USERNAME", "docker")
 	os.Setenv("DB_HOST", "localhost")
 	os.Setenv("DB_PORT", "5420")
-	//os.Setenv("DB_PASSWORD", "docker")
+	os.Setenv("JWT_SIGNING_SECRET", "tomiwa")
 
 	dbPass := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")

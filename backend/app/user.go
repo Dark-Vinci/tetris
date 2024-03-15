@@ -95,3 +95,23 @@ func (a *App) Login(ctx *gin.Context, loginReq models.LoginRequest) (*models.Use
 
 	return user, nil
 }
+
+func (a *App) GetUsers(ctx *gin.Context, page helpers.Page) ([]*models.User, helpers.PageInfo, error) {
+	requestID := requestid.Get(ctx)
+
+	log := a.logger.With().Str(helpers.LogStrRequestIDLevel, requestID).
+		Str(helpers.LogStrKeyMethod, "app.user.GetUsers").Logger()
+
+	users, pageInfo, err := a.userRepository.GetAllUsers(ctx, models.User{}, page)
+	if err != nil {
+		log.Err(err).Msg("something went wrong")
+		return nil, pageInfo, helpers.ErrRecordNotFound
+	}
+
+	// star the password of each
+	for _, v := range users {
+		v.Password = helpers.StarPassword
+	}
+
+	return users, pageInfo, nil
+}

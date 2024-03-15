@@ -50,7 +50,7 @@ func main() {
 
 	//create handlers
 	h := handlers.New(&logger, a, e, r, *m)
-	//build project
+	//build handlers
 	h.Build()
 
 	srv := &http.Server{

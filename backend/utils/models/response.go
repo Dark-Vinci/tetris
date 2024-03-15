@@ -16,13 +16,23 @@ type ErrorData struct {
 }
 
 // A GenericResponse is our response uniform wrapper for our rest endpoints.
-// swagger:response genericResponse
-// in: body
 type GenericResponse struct {
 	Code    int         `json:"code"`
 	Data    interface{} `json:"data" swaggertype:"object"`
 	Message *string     `json:"message"`
 	Error   *ErrorData  `json:"error"`
+}
+
+type Request struct {
+	RequestID string `json:"requestID"`
+}
+
+type RefreshTokenResponse struct {
+	Request
+	AccessToken        string `json:"accessToken"`
+	AccessTokenExpiry  string `json:"accessTokenExpiry"`
+	RefreshToken       string `json:"refreshToken"`
+	RefreshTokenExpiry string `json:"refreshTokenExpiry"`
 }
 
 // Build is a GenericResponse constructor
