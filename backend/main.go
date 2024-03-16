@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -22,7 +23,7 @@ import (
 	"github.com/dark-vinci/tetris/backend/utils/models"
 )
 
-func main() {
+func startUp(e *models.Env, appLogger zerolog.Logger, logger zerolog.Logger) *gin.Engine {
 	r := gin.New()
 
 	//configure cors to allow request from any link
@@ -33,12 +34,6 @@ func main() {
 	r.Use(cors.New(corsConfig), gin.Recovery())
 	r.Use(helpers.GinContextToContextMiddleware())
 	r.Use(requestid.New())
-
-	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
-	appLogger := logger.With().Str("TETRIS", "api").Logger()
-
-	//create env
-	e := models.NewEnv()
 
 	//create repository
 	repo := repository.New(appLogger, *e)
@@ -53,8 +48,20 @@ func main() {
 	//build handlers
 	h.Build()
 
+	return r
+}
+
+func main() {
+	//create env
+	e := models.NewEnv()
+
+	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
+	appLogger := logger.With().Str("TETRIS", "api").Logger()
+
+	r := startUp(e, appLogger, logger)
+
 	srv := &http.Server{
-		Addr:    ":8080",
+		Addr:    fmt.Sprintf(":%s", e.PORT),
 		Handler: r,
 	}
 

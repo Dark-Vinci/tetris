@@ -36,7 +36,7 @@ func New(r *gin.RouterGroup, l *zerolog.Logger, a *app.App, e *models.Env, m mid
 	gameGroup := r.Group("/game")
 
 	gameGroup.POST("", m.AuthMiddleware(false), game.create())
-	gameGroup.GET("", m.AuthMiddleware(false), game.getUserGames())
+	gameGroup.GET("/user", m.AuthMiddleware(false), game.getUserGames())
 	gameGroup.GET("/all", m.AuthMiddleware(true), game.getAllGames())
 }
 

@@ -11,11 +11,12 @@ type Env struct {
 	JWTAccessTokenExpiry  string
 	JWTRefreshTokenExpiry string
 	JWTSigningSecret      string
+	PORT                  string
 }
 
 func NewEnv() *Env {
 	//JUST FOR THE ROAD
-	os.Setenv("DB_PASSWORD", "docker")
+	os.Setenv("DB_PASSWORD", "joshua")
 	os.Setenv("DB_NAME", "tetris")
 	os.Setenv("DB_USERNAME", "docker")
 	os.Setenv("DB_HOST", "localhost")
@@ -30,6 +31,7 @@ func NewEnv() *Env {
 	jwtAccessTokenExpiry := os.Getenv("JWT_ACCESS_TOKEN_EXPIRY")
 	jwtRefreshTokenExpiry := os.Getenv("JWT_REFRESH_TOKEN_EXPIRY")
 	jwtSigningSecret := os.Getenv("JWT_SIGNING_SECRET")
+	port := os.Getenv("PORT")
 
 	return &Env{
 		DBPassword:            dbPass,
@@ -40,5 +42,6 @@ func NewEnv() *Env {
 		JWTAccessTokenExpiry:  jwtAccessTokenExpiry,
 		JWTRefreshTokenExpiry: jwtRefreshTokenExpiry,
 		JWTSigningSecret:      jwtSigningSecret,
+		PORT:                  port,
 	}
 }
