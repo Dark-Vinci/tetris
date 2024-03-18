@@ -1,4 +1,6 @@
 import { Alert } from 'react-native';
+import axios from 'axios';
+import Constants from 'expo-constants';
 
 export enum Color {
   BLACK = '#0a0a0a',
@@ -34,6 +36,20 @@ export const debug = (color: string) => {
     borderColor: color,
   } as any;
 };
+
+export const createAxios = (token?: string) => {
+  const instance = axios.create({
+    baseURL: Constants.expoConfig?.extra?.baseURL,
+    headers: {
+      ...(token && { Authorization: token }),
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return instance;
+};
+
+// createAxios()
 
 export const showAlert = (message: string) => {
   Alert.alert(

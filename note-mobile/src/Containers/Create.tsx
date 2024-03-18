@@ -14,6 +14,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Constants from 'expo-constants';
 
 import { Color, NavAction, showAlert, USER_ID } from '../Component/constant';
 import { navigation } from '../Component/rootNavigation';
@@ -55,17 +56,14 @@ export function Create({ route }: CreateProps): JSX.Element {
   const fetchNote = async () => {
     try {
       if (id) {
-        axios
-          .get(`http://localhost:8080/notes/api/note/${id}`, {})
-          .then((res) => {
-            console.log({ abc: res.data.data });
-            setMain(res.data.data.content);
-            setTitle(res.data.data.title);
-            setDate(new Date(res.data.data.createdAt));
+        const response = await axios.get(
+          `${Constants.expoConfig?.extra?.baseURL}/note/${id}`,
+          {},
+        );
 
-            console.log({ main, title, date });
-          })
-          .catch((ERR) => console.log({ ERR }));
+        setMain(response.data.data.content);
+        setTitle(response.data.data.title);
+        setDate(new Date(response.data.data.createdAt));
       }
     } catch (_e) {
       showAlert('something went wrong');
@@ -98,18 +96,19 @@ export function Create({ route }: CreateProps): JSX.Element {
         return;
       }
 
-      console.log({ userID });
-
       switch (!!id) {
         case true:
-          await axios.put('http://localhost:8080/notes/api/note/update', {
-            title,
-            content: main,
-            id,
-          });
+          await axios.put(
+            `${Constants.expoConfig?.extra?.baseURL}/note/update`,
+            {
+              title,
+              content: main,
+              id,
+            },
+          );
           break;
         case false:
-          await axios.post('http://localhost:8080/notes/api/note', {
+          await axios.post(`${Constants.expoConfig?.extra?.baseURL}/note`, {
             title,
             content: main,
             userID,

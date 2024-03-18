@@ -9,9 +9,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Constants from 'expo-constants';
 
 import { Screen } from '../Component/Screen';
-import { Color, NavAction } from '../Component/constant';
+import { Color, NavAction, showAlert } from '../Component/constant';
 import { navigation } from '../Component/rootNavigation';
 
 export function SignUp(): JSX.Element {
@@ -51,7 +52,7 @@ export function SignUp(): JSX.Element {
         return;
       }
 
-      await axios.post('http://localhost:8080/notes/api/user/signup', {
+      await axios.post(`${Constants.expoConfig?.extra?.baseURL}/user/signup`, {
         email: email.toLowerCase(),
         password,
         username,
@@ -60,7 +61,7 @@ export function SignUp(): JSX.Element {
 
       navigation.push(NavAction.HOME);
     } catch (e) {
-      console.log({ e: JSON.stringify(e) });
+      showAlert('something went wrong');
     }
   };
 

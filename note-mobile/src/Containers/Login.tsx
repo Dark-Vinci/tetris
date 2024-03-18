@@ -7,15 +7,17 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
 } from 'react-native';
-import { JSX } from 'react';
+import { JSX, useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
+import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Screen } from '../Component/Screen';
 import {
   AUTH_TOKEN,
   Color,
+  createAxios,
   NavAction,
   showAlert,
   USER_ID,
@@ -26,6 +28,10 @@ export function Login(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    console.log({ res: createAxios() });
+  }, []);
 
   const emailInputChange = (text: string) => {
     setEmail(text);
@@ -49,8 +55,10 @@ export function Login(): JSX.Element {
         return;
       }
 
+      console.log({ base: Constants.expoConfig?.extra?.baseURL });
+
       const response = await axios.post(
-        'http://localhost:8080/notes/api/user/login',
+        `${Constants.expoConfig?.extra?.baseURL}/user/login`,
         {
           email: email.toLowerCase(),
           password,

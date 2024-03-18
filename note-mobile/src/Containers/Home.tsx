@@ -1,6 +1,7 @@
 import { FlatList, Text } from 'react-native';
 import { useEffect, useState, JSX } from 'react';
 import axios from 'axios';
+import Constants from 'expo-constants';
 
 import { HomeHeader } from '../Component/HomeHeader';
 import { NoteListItem } from '../Component/NoteListItem';
@@ -24,7 +25,7 @@ export function Home(): JSX.Element {
   const fetchNotes = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:8080/notes/api/note/all',
+        `${Constants.expoConfig?.extra?.baseURL}/note/all`,
         {},
       );
 
