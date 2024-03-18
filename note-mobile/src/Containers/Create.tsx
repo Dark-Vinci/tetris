@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Constants from 'expo-constants';
 
-import { Color, NavAction, showAlert, USER_ID } from '../Component/constant';
+import { AUTH_TOKEN, Color, NavAction, showAlert, USER_ID } from '../Component/constant';
 import { navigation } from '../Component/rootNavigation';
 
 type CreateRouteProp = RouteProp<
@@ -55,10 +55,21 @@ export function Create({ route }: CreateProps): JSX.Element {
 
   const fetchNote = async () => {
     try {
+      const authToken = await AsyncStorage.getItem(AUTH_TOKEN);
+
+      if (!authToken) {
+        showAlert('something is wrong');
+        return;
+      }
+
       if (id) {
         const response = await axios.get(
           `${Constants.expoConfig?.extra?.baseURL}/note/${id}`,
-          {},
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`
+            }
+          },
         );
 
         setMain(response.data.data.content);
@@ -96,6 +107,13 @@ export function Create({ route }: CreateProps): JSX.Element {
         return;
       }
 
+      const authToken = await AsyncStorage.getItem(AUTH_TOKEN);
+
+      if (!authToken) {
+        showAlert('something is wrong');
+        return;
+      }
+
       switch (!!id) {
         case true:
           await axios.put(
@@ -104,6 +122,10 @@ export function Create({ route }: CreateProps): JSX.Element {
               title,
               content: main,
               id,
+            }, {
+              headers: {
+                Authorization: `Bearer ${authToken}`
+              }
             },
           );
           break;
@@ -112,6 +134,10 @@ export function Create({ route }: CreateProps): JSX.Element {
             title,
             content: main,
             userID,
+          }, {
+            headers: {
+              Authorization: `Bearer ${authToken}`
+            }
           });
           break;
       }

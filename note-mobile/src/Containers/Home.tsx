@@ -2,11 +2,12 @@ import { FlatList, Text } from 'react-native';
 import { useEffect, useState, JSX } from 'react';
 import axios from 'axios';
 import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { HomeHeader } from '../Component/HomeHeader';
 import { NoteListItem } from '../Component/NoteListItem';
 import { Screen } from '../Component/Screen';
-import { showAlert } from '../Component/constant';
+import { AUTH_TOKEN, showAlert } from '../Component/constant';
 
 interface listType {
   readonly title: string;
@@ -24,9 +25,20 @@ export function Home(): JSX.Element {
 
   const fetchNotes = async () => {
     try {
+      const authToken = await AsyncStorage.getItem(AUTH_TOKEN);
+
+      if (!authToken) {
+        showAlert('something is wrong');
+        return;
+      }
+
       const response = await axios.get(
         `${Constants.expoConfig?.extra?.baseURL}/note/all`,
-        {},
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        },
       );
 
       setData(response.data.data.items);
