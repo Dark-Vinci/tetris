@@ -13,7 +13,13 @@ import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Screen } from '../Component/Screen';
-import { AUTH_TOKEN, Color, NavAction } from '../Component/constant';
+import {
+  AUTH_TOKEN,
+  Color,
+  NavAction,
+  showAlert,
+  USER_ID,
+} from '../Component/constant';
 import { navigation } from '../Component/rootNavigation';
 
 export function Login(): JSX.Element {
@@ -29,37 +35,38 @@ export function Login(): JSX.Element {
     setPassword(text);
   };
 
-  const loginPress = () => {
-    const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const loginPress = async () => {
+    try {
+      const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailIsValid.test(email)) {
-      setErrorMessage('invalid email');
-      return;
+      if (!emailIsValid.test(email)) {
+        setErrorMessage('invalid email');
+        return;
+      }
+
+      if (password.length < 7) {
+        setErrorMessage('invalid password');
+        return;
+      }
+
+      const response = await axios.post(
+        'http://localhost:8080/notes/api/user/login',
+        {
+          email: email.toLowerCase(),
+          password,
+        },
+      );
+
+      await Promise.all([
+        AsyncStorage.setItem(AUTH_TOKEN, response.data.data.token.AccessToken),
+
+        AsyncStorage.setItem(USER_ID, response.data.data.user.ID),
+      ]);
+
+      navigation.push(NavAction.HOME);
+    } catch (e) {
+      showAlert('something went wrong');
     }
-
-    if (password.length < 7) {
-      setErrorMessage('invalid password');
-      return;
-    }
-
-    axios
-      .post('http://localhost:8080/notes/api/user/login', {
-        email: email.toLowerCase(),
-        password,
-      })
-      .then((res) => {
-        console.log('LOGGED MINNNIE...');
-        AsyncStorage.setItem(AUTH_TOKEN, res.data.data.token.AccessToken).then(
-          (_el: any) => {
-            console.log({ _el });
-          },
-        );
-      })
-      .catch((ERR) => console.log({ ERR }));
-
-    navigation.push(NavAction.HOME);
-
-    console.log({ email, password });
   };
 
   return (

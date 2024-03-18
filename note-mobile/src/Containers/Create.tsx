@@ -12,9 +12,10 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-import { Color } from '../Component/constant';
+import { Color, NavAction, showAlert, USER_ID } from '../Component/constant';
 import { navigation } from '../Component/rootNavigation';
 
 type CreateRouteProp = RouteProp<
@@ -49,21 +50,31 @@ export function Create({ route }: CreateProps): JSX.Element {
 
   const id = route?.params?.id;
 
+  const isNew = !id;
+
+  const fetchNote = async () => {
+    try {
+      if (id) {
+        axios
+          .get(`http://localhost:8080/notes/api/note/${id}`, {})
+          .then((res) => {
+            console.log({ abc: res.data.data });
+            setMain(res.data.data.content);
+            setTitle(res.data.data.title);
+            setDate(new Date(res.data.data.createdAt));
+
+            console.log({ main, title, date });
+          })
+          .catch((ERR) => console.log({ ERR }));
+      }
+    } catch (_e) {
+      showAlert('something went wrong');
+    }
+  };
+
   // fetch the details
   useEffect(() => {
-    if (id) {
-      axios
-        .get(`http://localhost:8080/notes/api/note/${id}`, {})
-        .then((res) => {
-          console.log({ abc: res.data.data });
-          setMain(res.data.data.content);
-          setTitle(res.data.data.title);
-          setDate(new Date(res.data.data.createdAt));
-
-          console.log({ main, title, date });
-        })
-        .catch((ERR) => console.log({ ERR }));
-    }
+    fetchNote().then();
   }, []);
 
   const handleMainChange = (text: string) => {
@@ -78,24 +89,43 @@ export function Create({ route }: CreateProps): JSX.Element {
     setTitle(text);
   };
 
-  const onSaveHandler = () => {
-    console.log({ main, title });
-    axios
-      .put('http://localhost:8080/notes/api/note/update', {
-        title,
-        content: main,
-        id,
-      })
-      .then((res) => {
-        console.log('UPDATED.......');
+  const onSaveHandler = async () => {
+    try {
+      const userID = await AsyncStorage.getItem(USER_ID);
 
-        console.log({ main, title, date });
-      })
-      .catch((ERR) => console.log({ ERR }));
+      if (!userID) {
+        showAlert('something is wrong');
+        return;
+      }
 
-    // update
-    navigation.goBack();
-    //   do dome magic
+      console.log({ userID });
+
+      switch (!!id) {
+        case true:
+          await axios.put('http://localhost:8080/notes/api/note/update', {
+            title,
+            content: main,
+            id,
+          });
+          break;
+        case false:
+          await axios.post('http://localhost:8080/notes/api/note', {
+            title,
+            content: main,
+            userID,
+          });
+          break;
+      }
+
+      if (isNew) {
+        navigation.push(NavAction.HOME);
+        return;
+      }
+
+      navigation.goBack();
+    } catch (e) {
+      showAlert('something went wrong');
+    }
   };
 
   useEffect(() => {

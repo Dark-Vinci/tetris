@@ -5,6 +5,7 @@ import axios from 'axios';
 import { HomeHeader } from '../Component/HomeHeader';
 import { NoteListItem } from '../Component/NoteListItem';
 import { Screen } from '../Component/Screen';
+import { showAlert } from '../Component/constant';
 
 interface listType {
   readonly title: string;
@@ -20,19 +21,21 @@ export function Home(): JSX.Element {
     setSearch(text);
   };
 
-  const fetchNotes = () => {
-    axios
-      .get('http://localhost:8080/notes/api/note/all', {})
-      .then((res) => {
-        console.log({ abc: res.data.data.items[0] });
+  const fetchNotes = async () => {
+    try {
+      const response = await axios.get(
+        'http://localhost:8080/notes/api/note/all',
+        {},
+      );
 
-        setData(res.data.data.items);
-      })
-      .catch((ERR) => console.log({ ERR }));
+      setData(response.data.data.items);
+    } catch (e) {
+      showAlert('something went wrong');
+    }
   };
 
   useEffect(() => {
-    fetchNotes();
+    fetchNotes().then();
   }, []);
 
   return (
@@ -68,12 +71,3 @@ export function Home(): JSX.Element {
     </Screen>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: Color.GLOBAL_BACKGROUND,
-//     alignItems: 'center',
-//     justifyContent: 'flex-start',
-//   },
-// });

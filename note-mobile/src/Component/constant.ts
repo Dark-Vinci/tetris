@@ -1,3 +1,5 @@
+import { Alert } from 'react-native';
+
 export enum Color {
   BLACK = '#0a0a0a',
   CREAM = '#c9c9c9',
@@ -23,6 +25,7 @@ export enum NavAction {
 }
 
 export const AUTH_TOKEN = 'AUTH_TOKEN' as const;
+export const USER_ID = 'USER_ID';
 
 export const debug = (color: string) => {
   return {
@@ -30,4 +33,18 @@ export const debug = (color: string) => {
     borderWidth: 1,
     borderColor: color,
   } as any;
+};
+
+export const showAlert = (message: string) => {
+  Alert.alert(
+    'error',
+    message,
+    [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+    ],
+    { cancelable: false },
+  );
 };

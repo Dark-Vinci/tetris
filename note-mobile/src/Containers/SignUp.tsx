@@ -32,42 +32,36 @@ export function SignUp(): JSX.Element {
     setUsername(text);
   };
 
-  const loginPress = () => {
-    const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const loginPress = async () => {
+    try {
+      const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailIsValid.test(email)) {
-      setErrorMessage('invalid email');
-      return;
-    }
+      if (!emailIsValid.test(email)) {
+        setErrorMessage('invalid email');
+        return;
+      }
 
-    if (!username) {
-      setErrorMessage('invalid username');
-      return;
-    }
+      if (!username) {
+        setErrorMessage('invalid username');
+        return;
+      }
 
-    if (password.length < 7) {
-      setErrorMessage('invalid password');
-      return;
-    }
+      if (password.length < 7) {
+        setErrorMessage('invalid password');
+        return;
+      }
 
-    console.log('FETCHING....');
-    axios
-      .post('http://localhost:8080/notes/api/user/signup', {
+      await axios.post('http://localhost:8080/notes/api/user/signup', {
         email: email.toLowerCase(),
         password,
         username,
         isAdmin: true,
-      })
-      .then((_res) => {
-        console.log('LOGGED MINNNIE...');
-      })
-      .catch((ERR) => console.log({ ERR: JSON.stringify(ERR) }));
+      });
 
-    setErrorMessage('');
-
-    navigation.push(NavAction.HOME);
-
-    console.log({ username, email, password });
+      navigation.push(NavAction.HOME);
+    } catch (e) {
+      console.log({ e: JSON.stringify(e) });
+    }
   };
 
   return (

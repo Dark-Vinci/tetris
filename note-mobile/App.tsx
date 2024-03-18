@@ -53,12 +53,8 @@ function App(): JSX.Element {
       >
         <RootStack.Screen name="SignUp" component={SignUp} />
         <RootStack.Screen name="Login" component={Login} />
-        {auth && (
-          <>
-            <RootStack.Screen name="Home" component={Home} />
-            <RootStack.Screen name="Create" component={Create} />
-          </>
-        )}
+        <RootStack.Screen name="Home" component={Home} />
+        <RootStack.Screen name="Create" component={Create} />
       </RootStack.Navigator>
     </NavigationContainer>
   );
