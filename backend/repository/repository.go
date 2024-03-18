@@ -46,7 +46,7 @@ func New(z zerolog.Logger, env models.Env) *Store {
 
 	z.Debug().Msg("connected to the database")
 
-	err = db.AutoMigrate(&models.User{}, &models.Game{})
+	err = db.AutoMigrate(&models.User{}, &models.Note{})
 	if err != nil {
 		z.Fatal().Err(err).Msg("unable to auto migrate models")
 		panic(err)

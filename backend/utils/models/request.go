@@ -3,9 +3,16 @@ package models
 import "github.com/google/uuid"
 
 type (
-	CreateGameRequest struct {
-		UserID uuid.UUID `json:"userID" validate:"required,uuid"`
-		Score  uint      `json:"amount" validate:"required,gt=0"`
+	CreateNoteRequest struct {
+		UserID  uuid.UUID `json:"userID" validate:"required,uuid"`
+		Content string    `json:"content" validate:"required"`
+		Title   string    `json:"title" validate:"required"`
+	}
+
+	UpdateNoteRequest struct {
+		Content string    `json:"content" validate:"required"`
+		Title   string    `json:"title" validate:"required"`
+		ID      uuid.UUID `json:"id" validate:"required"`
 	}
 
 	CreateUserRequest struct {

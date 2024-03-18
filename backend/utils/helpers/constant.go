@@ -16,4 +16,5 @@ var (
 	ErrRecordNotFound       = errors.New("error: Record not found")
 	ErrUserAlreadyExist     = errors.New("error: user already exist")
 	ErrInvalidCredential    = errors.New("error: invalid email or password")
+	ErrRecordUpdateFail     = errors.New("error: Unable to update record")
 )
