@@ -7,7 +7,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
 } from 'react-native';
-import { JSX, useEffect } from 'react';
+import { JSX } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import Constants from 'expo-constants';
@@ -17,7 +17,6 @@ import { Screen } from '../Component/Screen';
 import {
   AUTH_TOKEN,
   Color,
-  createAxios,
   NavAction,
   showAlert,
   USER_ID,
@@ -28,10 +27,6 @@ export function Login(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-    console.log({ res: createAxios() });
-  }, []);
 
   const emailInputChange = (text: string) => {
     setEmail(text);

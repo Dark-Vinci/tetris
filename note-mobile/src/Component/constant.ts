@@ -27,7 +27,7 @@ export enum NavAction {
 }
 
 export const AUTH_TOKEN = 'AUTH_TOKEN' as const;
-export const USER_ID = 'USER_ID';
+export const USER_ID = 'USER_ID' as const;
 
 export const debug = (color: string) => {
   return {
@@ -36,20 +36,6 @@ export const debug = (color: string) => {
     borderColor: color,
   } as any;
 };
-
-export const createAxios = (token?: string) => {
-  const instance = axios.create({
-    baseURL: Constants.expoConfig?.extra?.baseURL,
-    headers: {
-      ...(token && { Authorization: token }),
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return instance;
-};
-
-// createAxios()
 
 export const showAlert = (message: string) => {
   Alert.alert(
