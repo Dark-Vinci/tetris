@@ -10,7 +10,7 @@ import { Fontisto } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Color, NavAction } from './constant';
-import { navigate, navigation } from './rootNavigation';
+import { navigation } from './rootNavigation';
 
 interface HomeHeaderProps {
   readonly search: string;
