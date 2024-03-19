@@ -1,0 +1,9 @@
+
+@mixin Debug($col: red) {
+    border: 2px solid $col;
+}
+
+@mixin Border($col: blue, $wid: 2px, $radius: 0) {
+    border: $wid solid $col;
+    border-radius: $radius;
+}
