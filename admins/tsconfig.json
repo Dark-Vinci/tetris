@@ -41,7 +41,7 @@
     "skipLibCheck": true,
     "paths": {
       "@components": ["./Components"],
-      "@home": ["./Containers"],
+      "@containers": ["./Containers"],
       "@pages": ["./Pages"],
       "@startup": ["./Startup"],
       "@utils": ["./utils"],
