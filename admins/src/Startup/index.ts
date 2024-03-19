@@ -1,2 +1,2 @@
-export * from './App';
-export * from './reportWebVitals';
+export { App } from './App';
+export { reportWebVitals } from './reportWebVitals';

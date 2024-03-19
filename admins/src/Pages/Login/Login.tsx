@@ -1,7 +1,5 @@
-import {JSX } from 'react';
+import { JSX } from 'react';
 
 export function Login(): JSX.Element {
-  return (
-    <div>Login</div>
-  )
+  return <div>Login</div>;
 }
