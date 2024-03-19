@@ -36,8 +36,8 @@ export function Home(): JSX.Element {
         `${Constants.expoConfig?.extra?.baseURL}/note/all`,
         {
           headers: {
-            Authorization: `Bearer ${authToken}`
-          }
+            Authorization: `Bearer ${authToken}`,
+          },
         },
       );
 

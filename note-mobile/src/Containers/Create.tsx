@@ -16,7 +16,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Constants from 'expo-constants';
 
-import { AUTH_TOKEN, Color, NavAction, showAlert, USER_ID } from '../Component/constant';
+import {
+  AUTH_TOKEN,
+  Color,
+  NavAction,
+  showAlert,
+  USER_ID,
+} from '../Component/constant';
 import { navigation } from '../Component/rootNavigation';
 
 type CreateRouteProp = RouteProp<
@@ -50,7 +56,6 @@ export function Create({ route }: CreateProps): JSX.Element {
   const [date, setDate] = useState<Date>(new Date());
 
   const id = route?.params?.id;
-
   const isNew = !id;
 
   const fetchNote = async () => {
@@ -67,8 +72,8 @@ export function Create({ route }: CreateProps): JSX.Element {
           `${Constants.expoConfig?.extra?.baseURL}/note/${id}`,
           {
             headers: {
-              Authorization: `Bearer ${authToken}`
-            }
+              Authorization: `Bearer ${authToken}`,
+            },
           },
         );
 
@@ -122,23 +127,28 @@ export function Create({ route }: CreateProps): JSX.Element {
               title,
               content: main,
               id,
-            }, {
+            },
+            {
               headers: {
-                Authorization: `Bearer ${authToken}`
-              }
+                Authorization: `Bearer ${authToken}`,
+              },
             },
           );
           break;
         case false:
-          await axios.post(`${Constants.expoConfig?.extra?.baseURL}/note`, {
-            title,
-            content: main,
-            userID,
-          }, {
-            headers: {
-              Authorization: `Bearer ${authToken}`
-            }
-          });
+          await axios.post(
+            `${Constants.expoConfig?.extra?.baseURL}/note`,
+            {
+              title,
+              content: main,
+              userID,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            },
+          );
           break;
       }
 

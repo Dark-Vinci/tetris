@@ -39,7 +39,6 @@ func (m *Middleware) AuthMiddleware(onlyAdmin bool) gin.HandlerFunc {
 
 		userID, isAdmin, err := m.ParseToken(m.env, strings.TrimPrefix(bearerToken, "Bearer "))
 		if err != nil {
-			fmt.Println(err.Error())
 			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
 				ID:            requestID,
 				Handler:       packageName,

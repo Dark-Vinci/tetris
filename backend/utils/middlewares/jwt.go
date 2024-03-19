@@ -49,7 +49,7 @@ var (
 func jwtAccessTokenExpiry(env *models.Env) time.Duration {
 	ttl, err := strconv.Atoi(env.JWTAccessTokenExpiry)
 	if err != nil {
-		return time.Minute * 15
+		return time.Minute * 10000
 	}
 
 	return time.Minute * time.Duration(ttl)
@@ -58,7 +58,7 @@ func jwtAccessTokenExpiry(env *models.Env) time.Duration {
 func jwtRefreshTokenExpiry(env *models.Env) time.Duration {
 	ttl, err := strconv.Atoi(env.JWTRefreshTokenExpiry)
 	if err != nil {
-		return time.Hour * 24
+		return time.Hour * 240000
 	}
 
 	return time.Hour * time.Duration(ttl)

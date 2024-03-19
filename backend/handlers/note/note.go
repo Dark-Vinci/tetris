@@ -35,15 +35,11 @@ func New(r *gin.RouterGroup, l *zerolog.Logger, a *app.App, e *models.Env, m mid
 
 	noteGroup := r.Group("/note")
 
-	noteGroup.POST("", note.create())
+	noteGroup.POST("", m.AuthMiddleware(false), note.create())
 	noteGroup.PUT("/update", note.update())
-	noteGroup.GET("/user", note.getUserNotes())
-	noteGroup.GET("/:id", note.getNoteByID())
-	noteGroup.GET("/all", note.getAllNotes())
-
-	//noteGroup.POST("", m.AuthMiddleware(false), note.create())
-	//noteGroup.GET("/user", m.AuthMiddleware(false), note.getUserNotes())
-	//noteGroup.GET("/all", m.AuthMiddleware(true), note.getAllNotes())
+	noteGroup.GET("/user", m.AuthMiddleware(false), note.getUserNotes())
+	noteGroup.GET("/:id", m.AuthMiddleware(false), note.getNoteByID())
+	noteGroup.GET("/all", m.AuthMiddleware(true), note.getAllNotes())
 }
 
 func (u *noteHandler) update() gin.HandlerFunc {

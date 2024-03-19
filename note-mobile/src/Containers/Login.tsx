@@ -27,6 +27,7 @@ export function Login(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const emailInputChange = (text: string) => {
     setEmail(text);
@@ -50,7 +51,7 @@ export function Login(): JSX.Element {
         return;
       }
 
-      console.log({ base: Constants.expoConfig?.extra?.baseURL });
+      setIsLoading(true);
 
       const response = await axios.post(
         `${Constants.expoConfig?.extra?.baseURL}/user/login`,
@@ -68,7 +69,10 @@ export function Login(): JSX.Element {
 
       navigation.push(NavAction.HOME);
     } catch (e) {
+      console.log({ e: JSON.stringify(e) });
       showAlert('something went wrong');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -155,6 +159,7 @@ export function Login(): JSX.Element {
                 color: 'white',
                 fontSize: 20,
                 lineHeight: 60,
+                opacity: isLoading ? 0.5 : 1,
               }}
             >
               Login

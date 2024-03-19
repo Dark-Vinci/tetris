@@ -13,7 +13,13 @@ import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Screen } from '../Component/Screen';
-import { AUTH_TOKEN, Color, NavAction, showAlert, USER_ID } from '../Component/constant';
+import {
+  AUTH_TOKEN,
+  Color,
+  NavAction,
+  showAlert,
+  USER_ID,
+} from '../Component/constant';
 import { navigation } from '../Component/rootNavigation';
 
 export function SignUp(): JSX.Element {
@@ -53,18 +59,21 @@ export function SignUp(): JSX.Element {
         return;
       }
 
-      const response = await axios.post(`${Constants.expoConfig?.extra?.baseURL}/user/signup`, {
-        email: email.toLowerCase(),
-        password,
-        username,
-        isAdmin: true,
-      });
+      const response = await axios.post(
+        `${Constants.expoConfig?.extra?.baseURL}/user/signup`,
+        {
+          email: email.toLowerCase(),
+          password,
+          username,
+          isAdmin: true,
+        },
+      );
 
       await Promise.all([
         AsyncStorage.setItem(AUTH_TOKEN, response.data.data.token.AccessToken),
 
         AsyncStorage.setItem(USER_ID, response.data.data.user.ID),
-      ])
+      ]);
 
       navigation.push(NavAction.HOME);
     } catch (e) {
