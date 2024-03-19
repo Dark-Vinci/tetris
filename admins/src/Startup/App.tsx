@@ -1,19 +1,8 @@
 import { JSX, useEffect } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
 
+import { router } from '@utils';
 import './App.scss';
-
-const router = createBrowserRouter(
-  [
-    {
-      id: 'root',
-      path: '/',
-    },
-  ],
-  {
-    basename: '/melon',
-  },
-);
 
 export function App(): JSX.Element {
   useEffect(() => {
@@ -21,6 +10,9 @@ export function App(): JSX.Element {
   }, []);
 
   return (
-    <RouterProvider router={router} fallbackElement={<p>Initial Load...</p>} />
+    <RouterProvider
+      router={router()}
+      fallbackElement={<p>Initial Load...</p>}
+    />
   );
 }

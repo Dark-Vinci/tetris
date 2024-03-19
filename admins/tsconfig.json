@@ -43,7 +43,8 @@
       "@components": ["./Components"],
       "@home": ["./Containers"],
       "@pages": ["./Pages"],
-      "@startup": ["./Startup"]
+      "@startup": ["./Startup"],
+      "@utils": ["./utils"],
     }
   },
   "include": [

@@ -8,6 +8,7 @@ module.exports = {
       '@containers': path.resolve(__dirname, 'src/Containers'),
       '@startup': path.resolve(__dirname, 'src/Startup'),
       '@pages': path.resolve(__dirname, 'src/Pages'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
     },
   },
 };
