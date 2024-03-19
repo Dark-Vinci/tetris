@@ -1,3 +1,67 @@
+@import '../../sass/mixins/alignment.scss';
+@import '../../sass/mixins/mixins.scss';
+@import '../../sass/mixins/utils.scss';
+@import '../../sass/constants/constants.scss';
 
 div.container {
+  @include GridCenter();
+  @include Rectangle(100vw, 100vh);
+  //@include Debug();
+  background-color: $main-color;
+
+  & > div.container_minor {
+    @include Flex(column, center, center);
+    //@include Debug(green);
+    @include Rectangle(40vw, 100%);
+
+    & > div.header {
+      @include GridCenter();
+    }
+
+    & > div.form {
+      //@include Debug(blue);
+      @include Flex(column, space-evenly, center);
+
+      & > div.input_container {
+        //@include Debug(green);
+        @include Rectangle(60%, 50px);
+        @include Flex(row, space-evenly);
+        background-color: $white-color;
+        border-radius: 20px;
+
+        & > input {
+          width: calc(100% - 50px - 20px);
+          border: none;
+          font-size: 20px;
+          text-align: center;
+
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+    }
+
+    & > div.foot {
+      @include Flex(row, center, flex-start);
+      & > button {
+        @include Rectangle(200px, 60px);
+        border-radius: 20px;
+        font-size: 30px;
+        border: none;
+        background-color: $minor-color;
+        color: $white-color;
+
+        &:active {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    & > div {
+      flex-basis: 33.33%;
+      //@include Debug();
+      width: 100%;
+    }
+  }
 }
