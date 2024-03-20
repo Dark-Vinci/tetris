@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import style from './UsersTable.module.scss';
 
-interface userDetail {
+export interface userDetail {
   readonly createdAt: Date;
   readonly id: string;
   readonly username: string;
@@ -28,18 +28,18 @@ export function UsersTable({ data }: userTableProps): JSX.Element {
         </thead>
 
         <tbody>
-          {
-            data.map(({ username, createdAt, email, count, id }) => {
-              return <tr key={id}>
+          {data.map(({ username, createdAt, email, count, id }) => {
+            return (
+              <tr key={id}>
                 <td>{username}</td>
                 <td>{email}</td>
                 <td>{count}</td>
                 <td>{new Date(createdAt).toDateString()}</td>
               </tr>
-            })
-          }
+            );
+          })}
         </tbody>
       </table>
     </div>
-  )
+  );
 }

@@ -1,0 +1,26 @@
+@import '../../sass/mixins/alignment.scss';
+@import '../../sass/mixins/utils.scss';
+
+div.container {
+  //@include Debug(yellow);
+  @include Rectangle(300px, 150px);
+  border-radius: 20px;
+  @include Flex(column);
+
+  & > p {
+    flex-basis: 50%;
+    //@include Debug(green);
+    width: 100%;
+
+    &:first-child {
+      @include Flex(row, flex-end, center);
+      padding-right: 10px;
+      font-size: 20px;
+    }
+
+    &:last-child {
+      padding-left: 20px;
+      font-size: 55px;
+    }
+  }
+}

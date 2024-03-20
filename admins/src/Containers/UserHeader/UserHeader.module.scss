@@ -4,5 +4,58 @@
 @import '../../sass/constants/constants.scss';
 
 div.container {
+  @include Debug(blue);
+  @include Rectangle(100vw, 40vh);
+  @include GridCenter();
 
+  & > div.container_minor {
+    //@include Debug(green);
+    @include Flex(column, space-around, center);
+    @include Rectangle();
+
+    & > div {
+      width: 80%;
+      //@include Debug(black);
+    }
+
+    & > div.input {
+      @include Flex(row, flex-end);
+
+      & > div {
+        @include Rectangle(360px, auto);
+        //@include Debug();
+        @include Flex();
+        border-radius: 20px;
+        border: 1px solid black;
+
+        & > input {
+          flex-basis: calc(100% - 50px);
+          border:none;
+          @include Rectangle(100%, 50px);
+          font-size: 20px;
+          padding-left: 10px;
+          border-radius: 20px 0 0 20px;
+
+          &:focus {
+            outline: none;
+          }
+        }
+
+        & > :not(input) {
+          background-color: $main-color;
+          padding: 5px;
+          border-radius: 0 19px 19px 0;
+
+          &:hover {
+            background-color: #563d2d;
+          }
+        }
+      }
+    }
+
+    & > div.cards {
+      @include Rectangle(80%, auto);
+      @include Flex(row, space-around);
+    }
+  }
 }
