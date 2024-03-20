@@ -33,9 +33,14 @@ div.container {
     tr {
       height: 42px;
       font-size: 17px;
+      transition: all 0.5s;
 
       &:nth-child(even) {
         background-color: $main-min-opacity;
+      }
+
+      &:hover {
+        opacity: 0.5;
       }
     }
   }

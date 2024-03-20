@@ -1,6 +1,7 @@
 import { JSX } from 'react';
 
 import style from './UsersTable.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 export interface userDetail {
   readonly createdAt: Date;
@@ -15,6 +16,8 @@ interface userTableProps {
 }
 
 export function UsersTable({ data }: userTableProps): JSX.Element {
+  const nav = useNavigate();
+
   return (
     <div className={style.container}>
       <table>
@@ -30,7 +33,7 @@ export function UsersTable({ data }: userTableProps): JSX.Element {
         <tbody>
           {data.map(({ username, createdAt, email, count, id }) => {
             return (
-              <tr key={id}>
+              <tr key={id} onClick={() => nav(`/user/${id}`)}>
                 <td>{username}</td>
                 <td>{email}</td>
                 <td>{count}</td>

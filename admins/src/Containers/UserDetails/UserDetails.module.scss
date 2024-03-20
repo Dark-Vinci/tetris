@@ -1,0 +1,44 @@
+@import '../../sass/mixins/alignment.scss';
+@import '../../sass/mixins/mixins.scss';
+@import '../../sass/mixins/utils.scss';
+@import '../../sass/constants/constants.scss';
+
+div.container {
+  @include Rectangle(100vw, 40vh);
+  @include GridCenter();
+  @include Debug();
+
+  & > div.container_minor {
+    @include Flex(column, space-around);
+    //@include Debug();
+    @include Rectangle(70vw, 300px);
+
+    div:first-child {
+      flex-basis: 50%;
+      //@include Debug();
+      @include GridCenter();
+
+      //update
+      background-color: #563d2d;
+      color: white;
+
+      width: 150px;
+      height: 150px;
+      border-radius: 30px;
+      font-size: 90px;
+      font-weight: 500;
+    }
+
+    & > div.details {
+      @include Flex(row, space-around);
+      //@include Debug();
+      @include Rectangle(70%, 100px);
+
+      & > p {
+        flex-basis: 33.33%;
+        //@include Debug();
+        text-align: center;
+      }
+    }
+  }
+}

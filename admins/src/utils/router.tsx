@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import { Login, Notes, Users, Welcome } from '@pages';
+import { Login, Notes, User, Users, Welcome } from '@pages';
 
 export function router() {
   return createBrowserRouter(
@@ -17,15 +17,15 @@ export function router() {
       },
       {
         id: 'users',
-        path: '/users',
-        Component: Users,
+        path: '/user/:userId',
+        Component: User,
       },
       {
         path: '',
         Component: Welcome,
       },
       {
-        path: '*',
+        path: '/users',
         Component: Users,
       },
     ],
