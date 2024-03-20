@@ -21,6 +21,7 @@ type UserRepo interface {
 	GetUserByID(ctx context.Context, userID uuid.UUID) (*models.User, error)
 	GetUserByUsername(ctx context.Context, username string) (*models.User, error)
 	GetAllUsers(ctx context.Context, query models.User, page helpers.Page) ([]*models.User, helpers.PageInfo, error)
+	CountUsers(ctx context.Context) (int64, error)
 }
 
 type User struct {
@@ -37,6 +38,19 @@ func NewUser(s *Store) *UserRepo {
 	}
 	userDatabase := UserRepo(user)
 	return &userDatabase
+}
+
+func (u *User) CountUsers(ctx context.Context) (int64, error) {
+	log := u.logger.With().Str(helpers.LogStrRequestIDLevel, u.storage.getRequestID(ctx)).
+		Str(helpers.LogStrKeyMethod, "repository.user.CountUsers").Logger()
+
+	var count int64
+	db := u.storage.DB.WithContext(ctx).Model(&models.User{}).Count(&count)
+	if db.Error != nil {
+		log.Err(db.Error).Msg("count not possible")
+		return count, helpers.ErrRecordNotFound
+	}
+	return count, nil
 }
 
 func (u *User) GetUserByUsername(ctx context.Context, username string) (*models.User, error) {

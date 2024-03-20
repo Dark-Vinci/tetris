@@ -42,6 +42,135 @@ func New(r *gin.RouterGroup, l *zerolog.Logger, a *app.App, e *models.Env, m mid
 
 	userGroup.GET("/me", m.AuthMiddleware(false), user.me())
 	userGroup.GET("/all", m.AuthMiddleware(true), user.getUsers())
+	userGroup.GET("/search", m.AuthMiddleware(true), user.searchUsers())
+	userGroup.GET("/analytics", m.AuthMiddleware(true), user.getAnalytics())
+	userGroup.GET("/:id", m.AuthMiddleware(true), user.getUserByID())
+}
+
+func (u *userHandler) getUserByID() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var err error
+		requestID := requestid.Get(c)
+		userID := c.Param("id")
+
+		uID, err := uuid.Parse(userID)
+		if err != nil {
+			u.logger.Err(err).Msg("unable to parse user id")
+			models.ErrorResponse(c, http.StatusUnprocessableEntity, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		// validate user
+		response, err := u.app.GetUserByID(c, uID)
+		if err != nil {
+			u.logger.Err(err).Msg("RefreshToken:unable to get search users")
+			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: err.Error(),
+			})
+			return
+		}
+
+		models.OkResponse(c, http.StatusOK, "user fetched successfuly", response)
+	}
+}
+
+func (u *userHandler) getAnalytics() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var err error
+		requestID := requestid.Get(c)
+
+		bearerToken := c.Request.Header.Get("Authorization")
+		if len(bearerToken) == 0 {
+			u.logger.Err(err).Msg("refresh token is missing in headers")
+			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: "refresh token is missing",
+			})
+			return
+		}
+
+		log.Info().Msg("payload received")
+		if !strings.HasPrefix(bearerToken, "Bearer ") {
+			log.Err(err).Msg("refresh token is invalid")
+			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: "refresh token is invalid",
+			})
+			return
+		}
+
+		// validate user
+		response, err := u.app.GetUserAnalytics(c)
+		if err != nil {
+			u.logger.Err(err).Msg("RefreshToken:unable to get search users")
+			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: err.Error(),
+			})
+			return
+		}
+
+		models.OkResponse(c, http.StatusOK, "users successfully searched!", response)
+	}
+}
+
+func (u *userHandler) searchUsers() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var err error
+		var search = c.Query("search")
+		pages := helpers.ParsePageParams(c)
+
+		requestID := requestid.Get(c)
+
+		bearerToken := c.Request.Header.Get("Authorization")
+		if len(bearerToken) == 0 {
+			u.logger.Err(err).Msg("refresh token is missing in headers")
+			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: "refresh token is missing",
+			})
+			return
+		}
+
+		log.Info().Msg("payload received")
+		if !strings.HasPrefix(bearerToken, "Bearer ") {
+			log.Err(err).Msg("refresh token is invalid")
+			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: "refresh token is invalid",
+			})
+			return
+		}
+
+		// validate user
+		users, pageInfo, err := u.app.SearchUsers(c, pages, search)
+		if err != nil {
+			u.logger.Err(err).Msg("RefreshToken:unable to get search users")
+			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameUser,
+				PublicMessage: err.Error(),
+			})
+			return
+		}
+
+		models.OkResponse(c, http.StatusOK, "users successfully searched!", helpers.PaginatedResponse{
+			Items: users,
+			Page:  pageInfo,
+		})
+	}
 }
 
 func (u *userHandler) refreshToken() gin.HandlerFunc {

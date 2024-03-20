@@ -28,6 +28,9 @@ func (m *Middleware) AuthMiddleware(onlyAdmin bool) gin.HandlerFunc {
 			})
 			return
 		}
+
+		fmt.Printf("%v", bearerToken)
+
 		if !strings.HasPrefix(bearerToken, "Bearer ") {
 			models.ErrorResponse(c, http.StatusUnauthorized, models.ErrorData{
 				ID:            requestID,

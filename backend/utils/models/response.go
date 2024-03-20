@@ -27,6 +27,12 @@ type Request struct {
 	RequestID string `json:"requestID"`
 }
 
+type AnalyticsResponse struct {
+	UserCount   int64   `json:"userCount"`
+	NoteCount   int64   `json:"noteCount"`
+	NotePerUser float64 `json:"notePerUser"`
+}
+
 type RefreshTokenResponse struct {
 	Request
 	AccessToken        string `json:"accessToken"`

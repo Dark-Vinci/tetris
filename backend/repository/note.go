@@ -21,6 +21,7 @@ type NoteRepo interface {
 	SoftDeleteByID(ctx context.Context, ID uuid.UUID) error
 	GetByID(ctx context.Context, ID uuid.UUID) (*models.Note, error)
 	UpdateNote(ctx context.Context, note models.Note) (*models.Note, error)
+	CountNotes(ctx context.Context) (int64, error)
 }
 
 type Note struct {
@@ -37,6 +38,19 @@ func NewNote(s *Store) *NoteRepo {
 	}
 	noteDatabase := NoteRepo(note)
 	return &noteDatabase
+}
+
+func (n *Note) CountNotes(ctx context.Context) (int64, error) {
+	log := n.logger.With().Str(helpers.LogStrRequestIDLevel, n.storage.getRequestID(ctx)).
+		Str(helpers.LogStrKeyMethod, "repository.note.CountNotes").Logger()
+
+	var count int64
+	db := n.storage.DB.WithContext(ctx).Model(&models.Note{}).Count(&count)
+	if db.Error != nil {
+		log.Err(db.Error).Msg("count not possible")
+		return count, helpers.ErrRecordNotFound
+	}
+	return count, nil
 }
 
 func (n *Note) UpdateNote(ctx context.Context, note models.Note) (*models.Note, error) {

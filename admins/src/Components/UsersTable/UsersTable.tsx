@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 export interface userDetail {
   readonly createdAt: Date;
-  readonly id: string;
+  readonly ID: string;
   readonly username: string;
   readonly email: string;
-  readonly count: number;
+  readonly password: string;
 }
 
 interface userTableProps {
@@ -25,18 +25,18 @@ export function UsersTable({ data }: userTableProps): JSX.Element {
           <tr>
             <th>username</th>
             <th>email</th>
-            <th>note count</th>
+            <th>password</th>
             <th>created at</th>
           </tr>
         </thead>
 
         <tbody>
-          {data.map(({ username, createdAt, email, count, id }) => {
+          {data.map(({ username, createdAt, email, password, ID }) => {
             return (
-              <tr key={id} onClick={() => nav(`/user/${id}`)}>
+              <tr key={ID} onClick={() => nav(`/user/${ID}`)}>
                 <td>{username}</td>
                 <td>{email}</td>
-                <td>{count}</td>
+                <td>{password}</td>
                 <td>{new Date(createdAt).toDateString()}</td>
               </tr>
             );

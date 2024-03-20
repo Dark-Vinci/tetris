@@ -99,6 +99,53 @@ func (a *App) Login(ctx *gin.Context, loginReq models.LoginRequest) (*models.Use
 	return user, nil
 }
 
+func (a *App) SearchUsers(ctx *gin.Context, page helpers.Page, value string) ([]*models.User, helpers.PageInfo, error) {
+	requestID := requestid.Get(ctx)
+
+	log := a.logger.With().Str(helpers.LogStrRequestIDLevel, requestID).
+		Str(helpers.LogStrKeyMethod, "app.user.SearchUsers").Logger()
+
+	users, pageInfo, err := a.userRepository.GetAllUsers(ctx, models.User{Username: value}, page)
+	if err != nil {
+		log.Err(err).Msg("something went wrong")
+		return nil, pageInfo, helpers.ErrRecordNotFound
+	}
+
+	// star the password of each
+	for _, v := range users {
+		v.Password = helpers.StarPassword
+	}
+
+	return users, pageInfo, nil
+}
+
+func (a *App) GetUserAnalytics(ctx *gin.Context) (*models.AnalyticsResponse, error) {
+	requestID := requestid.Get(ctx)
+
+	log := a.logger.With().Str(helpers.LogStrRequestIDLevel, requestID).
+		Str(helpers.LogStrKeyMethod, "app.user.GetUserAnalytics").Logger()
+
+	userCount, err := a.userRepository.CountUsers(ctx)
+	if err != nil {
+		log.Err(err).Msg("something went wrong")
+		return nil, helpers.ErrRecordNotFound
+	}
+
+	notesCount, err := a.notesRepository.CountNotes(ctx)
+	if err != nil {
+		log.Err(err).Msg("something went wrong")
+		return nil, helpers.ErrRecordNotFound
+	}
+
+	res := models.AnalyticsResponse{
+		UserCount:   userCount,
+		NoteCount:   notesCount,
+		NotePerUser: float64(notesCount) / float64(userCount),
+	}
+
+	return &res, nil
+}
+
 func (a *App) GetUsers(ctx *gin.Context, page helpers.Page) ([]*models.User, helpers.PageInfo, error) {
 	requestID := requestid.Get(ctx)
 

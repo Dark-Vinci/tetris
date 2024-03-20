@@ -1,4 +1,4 @@
-import { ChangeEvent, JSX, useState } from 'react';
+import { ChangeEvent, JSX, MouseEventHandler } from 'react';
 import { BsSearch } from 'react-icons/bs';
 
 import style from './UserHeader.module.scss';
@@ -9,31 +9,34 @@ interface userHeaderProp {
   // readonly totalCount: number;
   // readonly totalNotes: number;
   // readonly avg: number;
+  readonly search: string;
+  onSearchChange(e: ChangeEvent<HTMLInputElement>): void;
+  onSearch(e: MouseEventHandler<SVGElement>): void;
+  readonly analytics: number[];
 }
 
-const a = [
-  {
-    title: 'total users',
-    amount: 23,
-  },
+export function UserHeader({
+  search,
+  onSearchChange,
+  onSearch,
+  analytics,
+}: userHeaderProp): JSX.Element {
+  const a = [
+    {
+      title: 'total users',
+      amount: analytics[0],
+    },
 
-  {
-    title: 'total notes',
-    amount: 30,
-  },
+    {
+      title: 'total notes',
+      amount: analytics[1],
+    },
 
-  {
-    title: 'avg note/user',
-    amount: 2.333,
-  },
-];
-
-export function UserHeader({}: userHeaderProp): JSX.Element {
-  const [search, setSearch] = useState<string>('');
-
-  const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
+    {
+      title: 'avg note/user',
+      amount: analytics[2],
+    },
+  ];
 
   return (
     <div className={style.container}>
@@ -58,10 +61,10 @@ export function UserHeader({}: userHeaderProp): JSX.Element {
             <input
               type="text"
               value={search}
-              onChange={inputChangeHandler}
+              onChange={onSearchChange}
               placeholder="search by username..."
             />
-            <BsSearch size="50px" />
+            <BsSearch size="50px" onClick={onSearch as any} />
           </div>
         </div>
       </div>
