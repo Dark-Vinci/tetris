@@ -47,8 +47,6 @@ export function Login(): JSX.Element {
         },
       );
 
-      console.log({ isLoading, error });
-
       localStorage.setItem(AUTH_TOKEN, response.data.data.token.AccessToken);
       localStorage.setItem(USER_ID, response.data.data.user.ID);
 

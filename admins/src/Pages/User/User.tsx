@@ -152,7 +152,7 @@ export function User(): JSX.Element {
         </div>
 
         <div className={style.more}>
-          <Next />
+          <Next hasNext={false} hasPrev={false} />
         </div>
       </div>
     </div>
