@@ -4,9 +4,9 @@
 @import '../../sass/constants/constants.scss';
 
 div.container {
-  @include Rectangle(100vw, 40vh);
+  @include Rectangle(100vw, 35vh);
   @include GridCenter();
-  @include Debug();
+  //@include Debug();
 
   & > div.container_minor {
     @include Flex(column, space-around);
@@ -17,8 +17,6 @@ div.container {
       flex-basis: 50%;
       //@include Debug();
       @include GridCenter();
-
-      //update
       background-color: #563d2d;
       color: white;
 

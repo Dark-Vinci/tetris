@@ -1,3 +1,48 @@
+@import '../../sass/mixins/alignment.scss';
+@import '../../sass/mixins/mixins.scss';
+@import '../../sass/mixins/utils.scss';
+@import '../../sass/constants/constants.scss';
 
+div.container {
+  //@include Debug(green);
+  @include GridCenter();
 
-div.container {}
+  & > table {
+    //@include Debug(yellow);
+    @include Rectangle(70vw, auto);
+
+      &, tr, tbody, thead,td, th {
+        //border: 1px solid green;
+        border-collapse: collapse;
+        text-align: center;
+        vertical-align: bottom;
+      }
+
+      thead {
+        tr {
+          background-color: $main-color;
+          color: $white-color;
+          th {
+            //color: $white-color;
+            font-size: 25px;
+            font-weight: normal;
+          }
+        }
+      }
+
+      tr {
+        height: 42px;
+        font-size: 17px;
+        transition: all 0.5s;
+
+        &:nth-child(even) {
+          background-color: $main-min-opacity;
+        }
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    //}
+  }
+}

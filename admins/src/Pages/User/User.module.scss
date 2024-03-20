@@ -4,5 +4,15 @@
 @import '../../sass/constants/constants.scss';
 
 div.container {
-  @include Debug();
+  //@include Debug();
+
+  & > div.container_minor {
+    @include  Rectangle(1005, 100%);
+    //@include Debug(blue);
+
+    & > div.more {
+      //@include Debug(black);
+      @include GridCenter();
+    }
+  }
 }

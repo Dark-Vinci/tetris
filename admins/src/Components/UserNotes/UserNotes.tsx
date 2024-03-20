@@ -2,8 +2,15 @@ import { JSX } from 'react';
 
 import style from './UserNotes.module.scss';
 
+export interface userNote {
+  readonly id: string;
+  readonly title: string;
+  readonly createdAt: Date;
+  readonly content: string;
+}
+
 interface userNotesProps {
-  readonly notes: object[];
+  readonly notes: userNote[];
 }
 
 export function UserNotes({ notes }: userNotesProps): JSX.Element {
@@ -12,6 +19,7 @@ export function UserNotes({ notes }: userNotesProps): JSX.Element {
       <table>
         <thead>
           <tr>
+            <th>ID</th>
             <th>TITLE</th>
             <th>CREATED AT</th>
             <th>CONTENT</th>
@@ -19,10 +27,13 @@ export function UserNotes({ notes }: userNotesProps): JSX.Element {
         </thead>
 
         <tbody>
-          {notes.map(({}, i) => {
+          {notes.map(({ title, id, createdAt, content }) => {
             return (
-              <tr key={i}>
-                <td></td>
+              <tr key={id}>
+                <td>{id.slice(0, 15)}</td>
+                <td>{title.slice(0, 15)}</td>
+                <td>{new Date(createdAt).toDateString()}</td>
+                <td>{`${content.slice(0, 15)}...`}</td>
               </tr>
             );
           })}

@@ -11,29 +11,29 @@ div.container {
     //@include Debug(yellow);
     @include GridCenter();
 
-    & > div.more {
-      //@include Debug(blue);
-      @include Rectangle(70vw, auto);
-
-      & > div {
-        @include Flex(row, flex-end, center);
-        //@include Debug(green);
-
-        & > div {
-          @include GridCenter();
-          @include Square(60px);
-          //@include Debug();
-          margin: 5px;
-          border-radius: 100%;
-          transition: all 0.3s;
-
-          background-color: $minor-color;
-
-          &:hover {
-            opacity: 0.7;
-          }
-        }
-      }
-    }
+    //& > div.more {
+    //  //@include Debug(blue);
+    //  @include Rectangle(70vw, auto);
+    //
+    //  & > div {
+    //    @include Flex(row, flex-end, center);
+    //    //@include Debug(green);
+    //
+    //    & > div {
+    //      @include GridCenter();
+    //      @include Square(60px);
+    //      //@include Debug();
+    //      margin: 5px;
+    //      border-radius: 100%;
+    //      transition: all 0.3s;
+    //
+    //      background-color: $minor-color;
+    //
+    //      &:hover {
+    //        opacity: 0.7;
+    //      }
+    //    }
+    //  }
+    //}
   }
 }

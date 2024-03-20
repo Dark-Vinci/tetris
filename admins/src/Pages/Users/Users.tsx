@@ -1,9 +1,8 @@
 import { JSX } from 'react';
-import { RxTrackNext, RxTrackPrevious } from 'react-icons/rx';
 
 import style from './Users.module.scss';
 import { UserHeader } from '@containers';
-import { userDetail, UsersTable } from '@components';
+import { Next, userDetail, UsersTable } from '@components';
 
 const data: userDetail[] = [
   {
@@ -100,14 +99,7 @@ export function Users(): JSX.Element {
         </div>
 
         <div className={style.more}>
-          <div>
-            <div>
-              <RxTrackPrevious size="40px" color="white" />
-            </div>
-            <div>
-              <RxTrackNext size="40px" color="white" />
-            </div>
-          </div>
+          <Next />
         </div>
       </div>
     </div>

@@ -1,0 +1,29 @@
+@import '../../sass/mixins/alignment.scss';
+@import '../../sass/mixins/mixins.scss';
+@import '../../sass/mixins/utils.scss';
+@import '../../sass/constants/constants.scss';
+
+div.container {
+  @include Rectangle(70vw, auto);
+  //@include Debug();
+
+  & > div {
+    @include Flex(row, flex-end, center);
+    //@include Debug(green);
+
+    & > div {
+      @include GridCenter();
+      @include Square(60px);
+      //@include Debug();
+      margin: 5px;
+      border-radius: 100%;
+      transition: all 0.3s;
+
+      background-color: $minor-color;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+}
