@@ -13,6 +13,78 @@ const data: userDetail[] = [
     createdAt: new Date(),
     id: '2',
   },
+
+  {
+    username: 'melon',
+    email: 'melon@gmail.com',
+    count: 20,
+    createdAt: new Date(),
+    id: '2',
+  },
+
+  {
+    username: 'melon',
+    email: 'melon@gmail.com',
+    count: 20,
+    createdAt: new Date(),
+    id: '2',
+  },
+
+  {
+    username: 'melon',
+    email: 'melon@gmail.com',
+    count: 20,
+    createdAt: new Date(),
+    id: '2',
+  },
+
+  {
+    username: 'melon',
+    email: 'melon@gmail.com',
+    count: 20,
+    createdAt: new Date(),
+    id: '2',
+  },
+
+  {
+    username: 'melon',
+    email: 'melon@gmail.com',
+    count: 20,
+    createdAt: new Date(),
+    id: '2',
+  },
+
+  {
+    username: 'melon',
+    email: 'melon@gmail.com',
+    count: 20,
+    createdAt: new Date(),
+    id: '2',
+  },
+
+  {
+    username: 'melon',
+    email: 'melon@gmail.com',
+    count: 20,
+    createdAt: new Date(),
+    id: '2',
+  },
+
+  {
+    username: 'melon',
+    email: 'melon@gmail.com',
+    count: 20,
+    createdAt: new Date(),
+    id: '2',
+  },
+
+  {
+    username: 'melon',
+    email: 'melon@gmail.com',
+    count: 20,
+    createdAt: new Date(),
+    id: '2',
+  },
 ];
 
 export function Users(): JSX.Element {
@@ -27,12 +99,14 @@ export function Users(): JSX.Element {
           <UsersTable data={data} />
         </div>
 
-        <div>
+        <div className={style.more}>
           <div>
-            <RxTrackPrevious size="40px" />
-          </div>
-          <div>
-            <RxTrackNext size="40px" />
+            <div>
+              <RxTrackPrevious size="40px" color="white" />
+            </div>
+            <div>
+              <RxTrackNext size="40px" color="white" />
+            </div>
           </div>
         </div>
       </div>

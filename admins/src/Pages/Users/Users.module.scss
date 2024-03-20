@@ -1,3 +1,39 @@
+@import '../../sass/mixins/alignment.scss';
+@import '../../sass/mixins/mixins.scss';
+@import '../../sass/mixins/utils.scss';
+@import '../../sass/constants/constants.scss';
 
 div.container {
+  //@include Debug();
+  @include GridCenter();
+
+  & > div.container_minor {
+    //@include Debug(yellow);
+    @include GridCenter();
+
+    & > div.more {
+      //@include Debug(blue);
+      @include Rectangle(70vw, auto);
+
+      & > div {
+        @include Flex(row, flex-end, center);
+        //@include Debug(green);
+
+        & > div {
+          @include GridCenter();
+          @include Square(60px);
+          //@include Debug();
+          margin: 5px;
+          border-radius: 100%;
+          transition: all 0.3s;
+
+          background-color: $minor-color;
+
+          &:hover {
+            opacity: 0.7;
+          }
+        }
+      }
+    }
+  }
 }

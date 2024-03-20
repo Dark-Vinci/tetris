@@ -4,8 +4,8 @@
 @import '../../sass/constants/constants.scss';
 
 div.container {
-  @include Debug(blue);
-  @include Rectangle(100vw, 40vh);
+  //@include Debug(blue);
+  @include Rectangle(100vw, 33vh);
   @include GridCenter();
 
   & > div.container_minor {
@@ -13,13 +13,10 @@ div.container {
     @include Flex(column, space-around, center);
     @include Rectangle();
 
-    & > div {
-      width: 80%;
-      //@include Debug(black);
-    }
-
     & > div.input {
       @include Flex(row, flex-end);
+      @include Rectangle(70vw, 60px);
+      //@include Debug();
 
       & > div {
         @include Rectangle(360px, auto);
@@ -54,8 +51,8 @@ div.container {
     }
 
     & > div.cards {
-      @include Rectangle(80%, auto);
-      @include Flex(row, space-around);
+      @include Rectangle(70vw, auto);
+      @include Flex(row, space-between);
     }
   }
 }
