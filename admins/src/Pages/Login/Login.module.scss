@@ -30,10 +30,11 @@ div.container {
         border-radius: 20px;
 
         & > input {
-          width: calc(100% - 50px - 20px);
+          width: calc(100% - 50px - 40px);
           border: none;
+          //margin-left: 20px;
           font-size: 20px;
-          text-align: center;
+          //text-align: center;
 
           &:focus {
             outline: none;
