@@ -11,9 +11,10 @@ export interface userNote {
 
 interface userNotesProps {
   readonly notes: userNote[];
+  onClick(obj: userNote): void;
 }
 
-export function UserNotes({ notes }: userNotesProps): JSX.Element {
+export function UserNotes({ notes, onClick }: userNotesProps): JSX.Element {
   return (
     <div className={style.container}>
       <table>
@@ -29,7 +30,10 @@ export function UserNotes({ notes }: userNotesProps): JSX.Element {
         <tbody>
           {notes.map(({ title, id, createdAt, content }) => {
             return (
-              <tr key={id}>
+              <tr
+                key={id}
+                onClick={() => onClick({ title, id, createdAt, content })}
+              >
                 <td>{id.slice(0, 15)}</td>
                 <td>{title.slice(0, 15)}</td>
                 <td>{new Date(createdAt).toDateString()}</td>

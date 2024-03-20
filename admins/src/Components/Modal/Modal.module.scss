@@ -4,9 +4,10 @@
 @import '../../sass/constants/constants.scss';
 
 div.container {
-  @include Rectangle();
-  border-radius: 30px;
-  z-index: 20;
+  //@include Debug();
+  @include Rectangle(50vw, 60vh);
 
-  @include GridCenter();
+  & > div.container_minor {
+    @include Rectangle();
+  }
 }

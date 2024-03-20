@@ -6,9 +6,17 @@
 div.container {
   //@include Debug();
 
+  & > div.modal {
+    position: fixed;
+    top: 0;
+    left:0;
+    @include Rectangle(100vw, 100vh);
+    @include Debug();
+    @include GridCenter();
+  }
+
   & > div.container_minor {
-    @include  Rectangle(1005, 100%);
-    //@include Debug(blue);
+    @include  Rectangle(100vw, 100%);
 
     & > div.more {
       //@include Debug(black);

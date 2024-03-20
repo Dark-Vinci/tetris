@@ -1,10 +1,10 @@
-import { JSX } from 'react';
+import { JSX, useState, MouseEvent } from 'react';
 import { useParams } from 'react-router-dom';
 
 import style from './User.module.scss';
 import { UserDetails } from '@containers';
-import { Next, userNote, UserNotes } from '@components';
-import { generateRandom } from '@utils';
+import { Modal, Next, NoteModal, userNote, UserNotes } from '@components';
+import { bgColors, colors, generateRandom } from '@utils';
 
 const uN: userNote[] = [
   {
@@ -88,13 +88,53 @@ const uN: userNote[] = [
 
 export function User(): JSX.Element {
   const { userId } = useParams();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedNote, setSelectedNote] = useState<userNote>({
+    content: '',
+    createdAt: new Date(),
+    id: '',
+    title: '',
+  });
 
   const i = generateRandom();
 
-  console.log({ userId });
+  console.log({ i });
+
+  const clickHandler = (note: userNote) => {
+    setIsOpen(true);
+    setSelectedNote(note);
+  };
+
+  const closeModal = (event: MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    setIsOpen(false);
+  };
+
+  console.log({ userId, bgggg: colors[i], melon: bgColors[i], i });
 
   return (
     <div className={style.container}>
+      {isOpen && (
+        <div
+          className={style.modal}
+          onClick={(e) => closeModal(e)}
+          style={{ backgroundColor: bgColors[i] }}
+        >
+          <Modal
+            isOpen={isOpen}
+            children={
+              <NoteModal
+                bgColor={colors[i]}
+                content={selectedNote?.content}
+                createdAt={selectedNote?.createdAt}
+                id={selectedNote?.id}
+                title={selectedNote?.title}
+              />
+            }
+          />
+        </div>
+      )}
+
       <div className={style.container_minor}>
         <div>
           <UserDetails
@@ -106,7 +146,7 @@ export function User(): JSX.Element {
         </div>
 
         <div>
-          <UserNotes notes={uN} />
+          <UserNotes notes={uN} onClick={clickHandler} />
         </div>
 
         <div className={style.more}>
