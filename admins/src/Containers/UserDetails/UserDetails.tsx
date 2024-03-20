@@ -1,7 +1,6 @@
 import { JSX } from 'react';
 
 import style from './UserDetails.module.scss';
-// import { generateRandom } from '../../utils/helper';
 import { bgColors, colors } from '@utils';
 
 interface userDetailsProp {
@@ -17,13 +16,11 @@ export function UserDetails({
   email,
   index,
 }: userDetailsProp): JSX.Element {
-  // const i = generateRandom();
-
   return (
     <div className={style.container}>
       <div className={style.container_minor}>
         <div style={{ color: colors[index], backgroundColor: bgColors[index] }}>
-          {username[0].toUpperCase()}
+          {username[0]?.toUpperCase()}
         </div>
 
         <div className={style.details}>

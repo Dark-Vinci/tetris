@@ -1,105 +1,66 @@
-import { JSX, useState, MouseEvent, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { JSX, useEffect, useState, MouseEvent } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 import style from './User.module.scss';
 import { UserDetails } from '@containers';
 import { Modal, Next, NoteModal, userNote, UserNotes } from '@components';
-import { bgColors, colors, generateRandom } from '@utils';
+import {
+  AUTH_TOKEN,
+  bgColors,
+  colors,
+  formatToken,
+  generateRandom,
+  REACT_APP_API_ENDPOINT,
+} from '@utils';
 
-const uN: userNote[] = [
-  {
-    id: '78d34823-9469-4e17-a509-c44c380430b1',
-    title: 'head',
-    createdAt: new Date(),
-    content:
-      'This ius the content we want to do for this page and it would be a non mess hopefully',
-  },
-
-  {
-    id: '78d34823-9469-4e17-a509-c44c380430b1',
-    title: 'head',
-    createdAt: new Date(),
-    content:
-      'This ius the content we want to do for this page and it would be a non mess hopefully',
-  },
-
-  {
-    id: '12',
-    title: 'head',
-    createdAt: new Date(),
-    content:
-      'This ius the content we want to do for this page and it would be a non mess hopefully',
-  },
-  {
-    id: '78d34823-9469-4e17-a509-c44c380430b1',
-    title: 'head',
-    createdAt: new Date(),
-    content:
-      'This ius the content we want to do for this page and it would be a non mess hopefully',
-  },
-
-  {
-    id: '12',
-    title: 'head',
-    createdAt: new Date(),
-    content:
-      'This ius the content we want to do for this page and it would be a non mess hopefully',
-  },
-  {
-    id: '78d34823-9469-4e17-a509-c44c380430b1',
-    title: 'head',
-    createdAt: new Date(),
-    content:
-      'This ius the content we want to do for this page and it would be a non mess hopefully',
-  },
-
-  {
-    id: '12',
-    title: 'head',
-    createdAt: new Date(),
-    content:
-      'This ius the content we want to do for this page and it would be a non mess hopefully',
-  },
-
-  {
-    id: '12',
-    title: 'head',
-    createdAt: new Date(),
-    content:
-      'This ius the content we want to do for this page and it would be a non mess hopefully',
-  },
-
-  {
-    id: '12',
-    title: 'head',
-    createdAt: new Date(),
-    content:
-      'This ius the content we want to do for this page and it would be a non mess hopefully',
-  },
-
-  {
-    id: '12',
-    title: 'head',
-    createdAt: new Date(),
-    content:
-      'This ius the content we want to do for this page and it would be a non mess hopefully',
-  },
-];
+interface userType {
+  id: string;
+  createdAt: Date;
+  username: string;
+  email: string;
+}
 
 export function User(): JSX.Element {
   const { userId } = useParams();
+  const nav = useNavigate();
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedNote, setSelectedNote] = useState<userNote>({
-    content: '',
-    createdAt: new Date(),
     id: '',
     title: '',
+    createdAt: new Date(),
+    content: '',
   });
 
+  const [notes, setNotes] = useState([]);
+  const [user, setUser] = useState<userType>({
+    id: '',
+    createdAt: new Date(),
+    username: '',
+    email: '',
+  });
+  const [error, setError] = useState('');
   const [i, setI] = useState<number>(-1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [authToken, setAuthToken] = useState('');
 
   useEffect(() => {
     setI(generateRandom());
+
+    if (!userId) {
+      nav('/users');
+    }
+
+    const token = localStorage.getItem(AUTH_TOKEN);
+
+    if (token) {
+      setAuthToken(() => token);
+    } else {
+      nav('/login');
+    }
+
+    Promise.all([fetchUser(token!), fetchUserNotes(token!)]).then();
   }, []);
 
   const clickHandler = (note: userNote) => {
@@ -112,7 +73,52 @@ export function User(): JSX.Element {
     setIsOpen(false);
   };
 
-  console.log({ userId, bgggg: colors[i], melon: bgColors[i], i });
+  const fetchUserNotes = async (token: string) => {
+    try {
+      console.log({ notes, user, loading, error, authToken });
+      setLoading(true);
+
+      const response = await axios.get(
+        `${REACT_APP_API_ENDPOINT}/note/${userId}/user`,
+        {
+          headers: {
+            Authorization: formatToken(token),
+          },
+          params: {},
+        },
+      );
+
+      setNotes(response.data.data.items);
+    } catch (e) {
+      setError('abc');
+    } finally {
+      setLoading(false);
+    }
+  };
+  //
+  const fetchUser = async (token: string) => {
+    try {
+      setLoading(true);
+
+      const response = await axios.get(
+        `${REACT_APP_API_ENDPOINT}/user/${userId}`,
+        {
+          headers: {
+            Authorization: formatToken(token),
+          },
+          params: {},
+        },
+      );
+
+      console.log({ abc: response.data.data });
+
+      setUser(response.data.data);
+    } catch (e) {
+      setError('abc');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={style.container}>
@@ -140,16 +146,14 @@ export function User(): JSX.Element {
       <div className={style.container_minor}>
         <div>
           <UserDetails
-            createdAt={new Date()}
-            email={'email@gmail.com'}
-            username={'melon'}
+            createdAt={user?.createdAt}
+            email={user?.email}
+            username={user?.username}
             index={i}
           />
         </div>
 
-        <div>
-          <UserNotes notes={uN} onClick={clickHandler} />
-        </div>
+        <div>{<UserNotes notes={notes} onClick={clickHandler} />}</div>
 
         <div className={style.more}>
           <Next hasNext={false} hasPrev={false} />

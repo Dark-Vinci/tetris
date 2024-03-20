@@ -37,9 +37,41 @@ func New(r *gin.RouterGroup, l *zerolog.Logger, a *app.App, e *models.Env, m mid
 
 	noteGroup.POST("", m.AuthMiddleware(false), note.create())
 	noteGroup.PUT("/update", note.update())
-	noteGroup.GET("/user", m.AuthMiddleware(false), note.getUserNotes())
+	noteGroup.GET("/mine", m.AuthMiddleware(false), note.getMyNotes())
+	noteGroup.GET("/:id/user", m.AuthMiddleware(true), note.getUserNotes())
 	noteGroup.GET("/:id", m.AuthMiddleware(false), note.getNoteByID())
 	noteGroup.GET("/all", m.AuthMiddleware(true), note.getAllNotes())
+}
+
+func (u *noteHandler) getUserNotes() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		requestID := requestid.Get(c)
+		handlerNameAccount := c.FullPath()
+		var err error
+
+		userID := c.Param("id")
+
+		uID, err := uuid.Parse(userID)
+		if err != nil {
+			u.logger.Err(err).Msg("unable to parse userID")
+			models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
+				ID:            requestID,
+				Handler:       handlerNameAccount,
+				PublicMessage: err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		pages := helpers.ParsePageParams(c)
+
+		res, pageInfo, err := u.app.GetUserNotes(c, uID, pages)
+
+		models.OkResponse(c, http.StatusOK, "paginated user notes fetched successfully!", helpers.PaginatedResponse{
+			Items: res,
+			Page:  pageInfo,
+		})
+	}
 }
 
 func (u *noteHandler) update() gin.HandlerFunc {
@@ -105,34 +137,6 @@ func (u *noteHandler) getNoteByID() gin.HandlerFunc {
 			return
 		}
 
-		//pages := helpers.ParsePageParams(c)
-
-		//userID, ok := c.Get(middlewares.UserIDInContext)
-		//if !ok {
-		//	err = errors.New("note not found")
-		//
-		//	u.logger.Err(errors.New("note not found")).Msg("unable to get note")
-		//	models.ErrorResponse(c, http.StatusUnprocessableEntity, models.ErrorData{
-		//		ID:            requestID,
-		//		Handler:       handlerNameAccount,
-		//		PublicMessage: err.Error(),
-		//	})
-		//	c.Abort()
-		//	return
-		//}
-
-		//uID, err := uuid.Parse(userID.(string))
-		//if err != nil {
-		//	u.logger.Err(err).Msg("unable to parse userID")
-		//	models.ErrorResponse(c, http.StatusBadRequest, models.ErrorData{
-		//		ID:            requestID,
-		//		Handler:       handlerNameAccount,
-		//		PublicMessage: err.Error(),
-		//	})
-		//	c.Abort()
-		//	return
-		//}
-
 		res, err := u.app.GetNoteByID(c, noteID)
 		if err != nil {
 			u.logger.Err(err).Msg("unable to get note by id")
@@ -191,7 +195,7 @@ func (u *noteHandler) create() gin.HandlerFunc {
 	}
 }
 
-func (u *noteHandler) getUserNotes() gin.HandlerFunc {
+func (u *noteHandler) getMyNotes() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		requestID := requestid.Get(c)
 		handlerNameAccount := c.FullPath()

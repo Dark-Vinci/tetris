@@ -1,15 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import { Login, Notes, Page404, User, Users, Welcome } from '@pages';
+import { Login, Page404, User, Users, Welcome } from '@pages';
 
 export function router() {
   return createBrowserRouter(
     [
-      {
-        id: 'notes',
-        path: '/notes',
-        Component: Notes,
-      },
       {
         id: 'login',
         path: '/login',

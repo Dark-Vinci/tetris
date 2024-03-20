@@ -77,6 +77,8 @@ func (u *userHandler) getUserByID() gin.HandlerFunc {
 			return
 		}
 
+		response.Password = "********"
+
 		models.OkResponse(c, http.StatusOK, "user fetched successfuly", response)
 	}
 }
