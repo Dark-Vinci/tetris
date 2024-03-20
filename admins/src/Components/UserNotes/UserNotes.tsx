@@ -11,20 +11,21 @@ export function UserNotes({ notes }: userNotesProps): JSX.Element {
     <div className={style.container}>
       <table>
         <thead>
-        <tr>
-          <th>TITLE</th>
-          <th>CREATED AT</th>
-          <th>CONTENT</th>
-        </tr>
+          <tr>
+            <th>TITLE</th>
+            <th>CREATED AT</th>
+            <th>CONTENT</th>
+          </tr>
         </thead>
 
         <tbody>
-        {
-          notes.map(({}, i) => {
-            return <tr key={i}>
-              <td></td>
-            </tr>})
-        }
+          {notes.map(({}, i) => {
+            return (
+              <tr key={i}>
+                <td></td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
