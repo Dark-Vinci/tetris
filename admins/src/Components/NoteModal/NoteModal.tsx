@@ -26,7 +26,7 @@ export function NoteModal({
 
         {/*  other details*/}
         <div className={style.body}>
-          <p>id: {id}</p>
+          <p>id: {id.slice(0, 20)}</p>
           <p>created at {new Date(createdAt).toDateString()}</p>
         </div>
 

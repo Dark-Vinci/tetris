@@ -1,4 +1,4 @@
-import { JSX, useState, MouseEvent } from 'react';
+import { JSX, useState, MouseEvent, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import style from './User.module.scss';
@@ -96,9 +96,11 @@ export function User(): JSX.Element {
     title: '',
   });
 
-  const i = generateRandom();
+  const [i, setI] = useState<number>(-1);
 
-  console.log({ i });
+  useEffect(() => {
+    setI(generateRandom());
+  }, []);
 
   const clickHandler = (note: userNote) => {
     setIsOpen(true);
