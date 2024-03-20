@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import { Login, Notes, User, Users, Welcome } from '@pages';
+import { Login, Notes, Page404, User, Users, Welcome } from '@pages';
 
 export function router() {
   return createBrowserRouter(
@@ -27,6 +27,11 @@ export function router() {
       {
         path: '/users',
         Component: Users,
+      },
+
+      {
+        path: '*',
+        Component: Page404,
       },
     ],
     {
