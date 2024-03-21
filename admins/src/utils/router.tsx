@@ -23,7 +23,6 @@ export function router() {
         path: '/users',
         Component: Users,
       },
-
       {
         path: '*',
         Component: Page404,
