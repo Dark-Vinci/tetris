@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   StackActions,
   NavigationContainerRef,
@@ -7,7 +7,7 @@ import {
 
 export const navigationRef: React.RefObject<NavigationContainerRef<any>> =
   React.createRef();
-// export const navigation = navigationRef.current
+
 export function navigate(name: string, params?: object): void {
   navigationRef.current?.navigate(name, params);
 }
@@ -25,7 +25,6 @@ export function goBack(): void {
 }
 export const navigation = {
   navigate,
-  dispatch,
   replace,
   push,
   goBack,

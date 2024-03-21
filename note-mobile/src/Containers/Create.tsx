@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState } from 'react';
+import React, { JSX, useCallback, useEffect, useState } from 'react';
 import {
   Platform,
   SafeAreaView,
@@ -58,7 +58,7 @@ export function Create({ route }: CreateProps): JSX.Element {
   const id = route?.params?.id;
   const isNew = !id;
 
-  const fetchNote = async () => {
+  const fetchNote = useCallback(async () => {
     try {
       const authToken = await AsyncStorage.getItem(AUTH_TOKEN);
 
@@ -84,12 +84,12 @@ export function Create({ route }: CreateProps): JSX.Element {
     } catch (_e) {
       showAlert('something went wrong');
     }
-  };
+  }, [id]);
 
   // fetch the details
   useEffect(() => {
     fetchNote().then();
-  }, []);
+  }, [fetchNote]);
 
   const handleMainChange = (text: string) => {
     setMain(text);
@@ -164,10 +164,10 @@ export function Create({ route }: CreateProps): JSX.Element {
   };
 
   useEffect(() => {
-    if (!id && !titleSet && main.length != 0) {
+    if (!id && !titleSet && main.length !== 0) {
       setTitle(main.split('').slice(0, 15).join(''));
     }
-  }, [main]);
+  }, [id, main, titleSet]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -183,7 +183,6 @@ export function Create({ route }: CreateProps): JSX.Element {
             style={{
               height: '100%',
               flex: 1,
-              // ...debug('green'),
               fontSize: 30,
               color: Color.WHITE,
             }}
@@ -211,7 +210,7 @@ export function Create({ route }: CreateProps): JSX.Element {
 const styles = StyleSheet.create({
   container: {
     paddingTop:
-      Platform.OS == 'android' ? (StatusBar.currentHeight as number) * 2 : 0,
+      Platform.OS === 'android' ? (StatusBar.currentHeight as number) * 2 : 0,
     flex: 1,
     backgroundColor: Color.CREATE_BACKGROUND,
     alignItems: 'center',

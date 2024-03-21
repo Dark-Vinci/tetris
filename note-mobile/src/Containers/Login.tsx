@@ -5,9 +5,9 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
-import { JSX } from 'react';
+import React, { JSX } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import Constants from 'expo-constants';
@@ -78,7 +78,7 @@ export function Login(): JSX.Element {
 
   return (
     <Screen>
-      <KeyboardAvoidingView
+      <ScrollView
         style={{
           flex: 1,
           backgroundColor: Color.LOGIN_COLOR,
@@ -198,7 +198,7 @@ export function Login(): JSX.Element {
             </Text>
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+      </ScrollView>
     </Screen>
   );
 }

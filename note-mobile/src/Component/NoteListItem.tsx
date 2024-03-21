@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { JSX } from 'react';
+import React, { JSX } from 'react';
 
 import { Color, NavAction } from './constant';
 import { navigation } from './rootNavigation';

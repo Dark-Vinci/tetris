@@ -1,8 +1,8 @@
-import { JSX, useState } from 'react';
+import React, { JSX, useState } from 'react';
 import axios from 'axios';
 import {
   Image,
-  KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -83,7 +83,7 @@ export function SignUp(): JSX.Element {
 
   return (
     <Screen>
-      <KeyboardAvoidingView
+      <ScrollView
         style={{
           flex: 1,
           backgroundColor: Color.LOGIN_COLOR,
@@ -212,7 +212,7 @@ export function SignUp(): JSX.Element {
             </Text>
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+      </ScrollView>
     </Screen>
   );
 }

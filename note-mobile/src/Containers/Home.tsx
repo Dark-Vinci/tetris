@@ -1,5 +1,5 @@
 import { FlatList, Text } from 'react-native';
-import { useEffect, useState, JSX } from 'react';
+import React, { useEffect, useState, JSX } from 'react';
 import axios from 'axios';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';

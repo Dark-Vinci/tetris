@@ -1,6 +1,4 @@
 import { Alert } from 'react-native';
-import axios from 'axios';
-import Constants from 'expo-constants';
 
 export enum Color {
   BLACK = '#0a0a0a',
@@ -14,7 +12,7 @@ export enum Color {
   INPUT_BACKGROUND_COLOR = 'white',
   LOGIN_COLOR = '#D3BAA6',
   THICK = '#B5651D',
-  WHITE = 'white',
+  WHITE = '#FFFFFF',
   CREATE_BACKGROUND = '#C6A788',
   WATER = 'aqua',
 }

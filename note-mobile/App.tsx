@@ -4,7 +4,7 @@ import {
 } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
-import { JSX, useEffect, useState } from 'react';
+import React, { JSX, useEffect, useState } from 'react';
 
 import { Home } from './src/Containers/Home';
 import { Create } from './src/Containers/Create';

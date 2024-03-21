@@ -56,7 +56,7 @@ func main() {
 	e := models.NewEnv()
 
 	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
-	appLogger := logger.With().Str("TETRIS", "api").Logger()
+	appLogger := logger.With().Str("NOTE", "api").Logger()
 
 	r := startUp(e, appLogger, logger)
 
