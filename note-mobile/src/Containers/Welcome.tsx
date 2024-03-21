@@ -14,7 +14,13 @@ import { Color, navigation } from '@components';
 
 export function Welcome(): JSX.Element {
   return (
-    <LinearGradient colors={['#46d6f0', Color.BLUE]} style={styles.container}>
+    <LinearGradient
+      colors={['#46d6f0', Color.BLUE]}
+      start={[0, 0]}
+      end={[1, 1]}
+      locations={[0.1, 0.9]}
+      style={styles.container}
+    >
       <SafeAreaView style={styles.container_mini}>
         <View style={styles.top}>
           <Svg width="120" height="120" viewBox="0 0 120 120" fill="none">
@@ -82,7 +88,6 @@ const styles = StyleSheet.create({
     flexBasis: '50%',
     justifyContent: 'center',
     alignItems: 'center',
-    // flex: 1,
   },
 
   bottom_botton: {

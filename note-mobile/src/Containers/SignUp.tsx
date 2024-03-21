@@ -25,6 +25,7 @@ import {
 export function SignUp(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -38,6 +39,10 @@ export function SignUp(): JSX.Element {
 
   const usernameInputChange = (text: string) => {
     setUsername(text);
+  };
+
+  const confirmPasswordInputChange = (text: string) => {
+    setConfirmPassword(text);
   };
 
   const loginPress = async () => {
@@ -56,6 +61,11 @@ export function SignUp(): JSX.Element {
 
       if (password.length < 7) {
         setErrorMessage('invalid password');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        setErrorMessage('passwords do not match');
         return;
       }
 
@@ -157,7 +167,7 @@ export function SignUp(): JSX.Element {
                   backgroundColor: Color.INPUT_BACKGROUND_COLOR,
                   height: 50,
                   fontSize: 20,
-                  borderRadius: 20,
+                  borderRadius: 10,
                   paddingLeft: 16,
                   borderWidth: 1,
                   marginTop: 10,
@@ -175,7 +185,7 @@ export function SignUp(): JSX.Element {
                   backgroundColor: Color.INPUT_BACKGROUND_COLOR,
                   height: 50,
                   fontSize: 20,
-                  borderRadius: 20,
+                  borderRadius: 10,
                   paddingLeft: 16,
                   borderWidth: 1,
                   marginTop: 10,
@@ -194,7 +204,7 @@ export function SignUp(): JSX.Element {
                   backgroundColor: Color.INPUT_BACKGROUND_COLOR,
                   height: 50,
                   fontSize: 20,
-                  borderRadius: 20,
+                  borderRadius: 10,
                   paddingLeft: 16,
                   borderWidth: 1,
                   marginTop: 10,
@@ -207,14 +217,14 @@ export function SignUp(): JSX.Element {
               <Text>Confirm Password</Text>
               <TextInput
                 secureTextEntry={true}
-                onChangeText={passwordInputChange}
+                onChangeText={confirmPasswordInputChange}
                 placeholder={'*********'}
-                value={password}
+                value={confirmPassword}
                 style={{
                   backgroundColor: Color.INPUT_BACKGROUND_COLOR,
                   height: 50,
                   fontSize: 20,
-                  borderRadius: 20,
+                  borderRadius: 10,
                   paddingLeft: 16,
                   borderWidth: 1,
                   marginTop: 10,

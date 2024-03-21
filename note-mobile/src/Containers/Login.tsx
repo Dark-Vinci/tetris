@@ -165,6 +165,7 @@ export function Login(): JSX.Element {
                   fontSize: 20,
                   borderRadius: 10,
                   paddingLeft: 16,
+                  marginTop: 10,
                   borderColor: Color.INPUT_BORDER,
                   borderWidth: 1,
                 }}
@@ -181,6 +182,7 @@ export function Login(): JSX.Element {
                 style={{
                   backgroundColor: Color.INPUT_BACKGROUND_COLOR,
                   height: 50,
+                  marginTop: 10,
                   fontSize: 20,
                   borderRadius: 10,
                   paddingLeft: 16,
@@ -197,6 +199,7 @@ export function Login(): JSX.Element {
               flex: 1,
               justifyContent: 'center',
               alignItems: 'center',
+              marginTop: 30,
             }}
           >
             <Text
