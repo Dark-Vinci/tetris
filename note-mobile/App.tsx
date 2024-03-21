@@ -6,12 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import React, { JSX, useEffect, useState } from 'react';
 
-import { Home } from './src/Containers/Home';
-import { Create } from './src/Containers/Create';
-import { Login } from './src/Containers/Login';
-import { SignUp } from './src/Containers/SignUp';
-import { navigationRef } from './src/Component/rootNavigation';
-import { AUTH_TOKEN } from './src/Component/constant';
+import { Home, Create, Login, SignUp } from '@containers';
+import { navigationRef, AUTH_TOKEN } from '@components';
 
 interface CreateParam {
   id: string;

@@ -22,8 +22,8 @@ import {
   NavAction,
   showAlert,
   USER_ID,
-} from '../Component/constant';
-import { navigation } from '../Component/rootNavigation';
+  navigation,
+} from '@components';
 
 type CreateRouteProp = RouteProp<
   {

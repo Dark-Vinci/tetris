@@ -13,15 +13,15 @@ import { useState } from 'react';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Screen } from '../Component/Screen';
 import {
   AUTH_TOKEN,
   Color,
   NavAction,
   showAlert,
   USER_ID,
-} from '../Component/constant';
-import { navigation } from '../Component/rootNavigation';
+  navigation,
+  Screen,
+} from '@components';
 
 export function Login(): JSX.Element {
   const [email, setEmail] = useState('');

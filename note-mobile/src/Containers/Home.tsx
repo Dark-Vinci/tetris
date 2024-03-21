@@ -4,10 +4,13 @@ import axios from 'axios';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { HomeHeader } from '../Component/HomeHeader';
-import { NoteListItem } from '../Component/NoteListItem';
-import { Screen } from '../Component/Screen';
-import { AUTH_TOKEN, showAlert } from '../Component/constant';
+import {
+  HomeHeader,
+  NoteListItem,
+  Screen,
+  AUTH_TOKEN,
+  showAlert,
+} from '@components';
 
 interface listType {
   readonly title: string;
