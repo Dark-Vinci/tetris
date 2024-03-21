@@ -2,7 +2,7 @@ import { JSX, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import style from './Welcome.module.scss';
-import logo from '../../assets/logo.png';
+import logo from '@/assets/logo.png';
 import { AUTH_TOKEN, USER_ID } from '@utils';
 
 export function Welcome(): JSX.Element {

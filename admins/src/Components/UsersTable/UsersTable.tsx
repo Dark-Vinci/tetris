@@ -1,7 +1,7 @@
 import { JSX } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import style from './UsersTable.module.scss';
-import { useNavigate } from 'react-router-dom';
 
 export interface userDetail {
   readonly createdAt: Date;

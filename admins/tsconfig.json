@@ -45,6 +45,7 @@
       "@pages": ["./Pages"],
       "@startup": ["./Startup"],
       "@utils": ["./utils"],
+      "@": ["./*"],
     }
   },
   "include": [

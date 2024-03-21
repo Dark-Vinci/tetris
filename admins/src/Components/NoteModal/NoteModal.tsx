@@ -21,7 +21,7 @@ export function NoteModal({
     <div className={style.container} style={{ backgroundColor: bgColor }}>
       <div className={style.container_minor}>
         <div className={style.title}>
-          <p> {title}</p>
+          <p>{title}</p>
         </div>
 
         {/*  other details*/}

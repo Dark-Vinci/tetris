@@ -16,5 +16,5 @@ export const colors = [
 
 export const AUTH_TOKEN = 'AUTH_TOKEN' as const;
 export const USER_ID = 'USER_ID' as const;
-
-export const REACT_APP_API_ENDPOINT = 'http://localhost:8080/notes/api';
+export const SIZE = 100 as const;
+export const REACT_APP_API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT!;

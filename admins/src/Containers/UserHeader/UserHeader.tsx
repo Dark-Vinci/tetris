@@ -6,9 +6,6 @@ import { Card } from '@components';
 import { bgColors, colors } from '@utils';
 
 interface userHeaderProp {
-  // readonly totalCount: number;
-  // readonly totalNotes: number;
-  // readonly avg: number;
   readonly search: string;
   onSearchChange(e: ChangeEvent<HTMLInputElement>): void;
   onSearch(e: MouseEventHandler<SVGElement>): void;

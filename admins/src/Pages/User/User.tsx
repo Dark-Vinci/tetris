@@ -12,6 +12,7 @@ import {
   formatToken,
   generateRandom,
   REACT_APP_API_ENDPOINT,
+  SIZE,
 } from '@utils';
 
 interface userType {
@@ -84,7 +85,9 @@ export function User(): JSX.Element {
           headers: {
             Authorization: formatToken(token),
           },
-          params: {},
+          params: {
+            size: SIZE,
+          },
         },
       );
 
@@ -95,7 +98,7 @@ export function User(): JSX.Element {
       setLoading(false);
     }
   };
-  //
+
   const fetchUser = async (token: string) => {
     try {
       setLoading(true);
@@ -106,11 +109,8 @@ export function User(): JSX.Element {
           headers: {
             Authorization: formatToken(token),
           },
-          params: {},
         },
       );
-
-      console.log({ abc: response.data.data });
 
       setUser(response.data.data);
     } catch (e) {
