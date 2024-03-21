@@ -8,6 +8,7 @@ import React, { JSX, useEffect, useState } from 'react';
 
 import { Home, Create, Login, SignUp } from '@containers';
 import { navigationRef, AUTH_TOKEN } from '@components';
+import { Welcome } from './src/Containers/Welcome';
 
 interface CreateParam {
   id: string;
@@ -17,6 +18,7 @@ export type NoteStackParamList = {
   Login: undefined;
   SignUp: undefined;
   Home: undefined;
+  Welcome: undefined;
   Create: CreateParam;
 };
 
@@ -44,13 +46,15 @@ function App(): JSX.Element {
   return (
     <NavigationContainer ref={navigationRef}>
       <RootStack.Navigator
-        initialRouteName={auth ? 'Home' : 'Login'}
+        // initialRouteName={auth ? 'Home' : 'Login'}
+        initialRouteName="Welcome"
         screenOptions={navigationOptions}
       >
         <RootStack.Screen name="SignUp" component={SignUp} />
         <RootStack.Screen name="Login" component={Login} />
         <RootStack.Screen name="Home" component={Home} />
         <RootStack.Screen name="Create" component={Create} />
+        <RootStack.Screen name="Welcome" component={Welcome} />
       </RootStack.Navigator>
     </NavigationContainer>
   );

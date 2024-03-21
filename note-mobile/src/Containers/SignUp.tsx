@@ -1,8 +1,7 @@
 import React, { JSX, useState } from 'react';
 import axios from 'axios';
 import {
-  Image,
-  ScrollView,
+  Dimensions,
   StyleSheet,
   Text,
   TextInput,
@@ -11,6 +10,7 @@ import {
 } from 'react-native';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Svg, Path } from 'react-native-svg';
 
 import {
   AUTH_TOKEN,
@@ -83,76 +83,145 @@ export function SignUp(): JSX.Element {
 
   return (
     <Screen>
-      <ScrollView
-      // style={{
-      //   flex: 1,
-      //   backgroundColor: Color.LOGIN_COLOR,
-      //   alignItems: 'center',
-      //   justifyContent: 'space-between',
-      //   width: '100%',
-      // }}
+      <View
+        style={{
+          height: Dimensions.get('window').height - 100,
+          width: '100%',
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       >
         <View style={style.header}>
-          <Image
-            source={require('../../assets/logol.png')}
-            style={{
-              width: 100,
-              height: 100,
-              backgroundColor: 'transparent',
-            }}
-          />
+          <Svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+            <Path
+              d="M11.6669 24.9998H25.0002"
+              stroke="#7E869E"
+              stroke-width="4.29167"
+              stroke-linecap="round"
+            />
+            <Path
+              d="M11.6669 51.6665H25.0002"
+              stroke="#7E869E"
+              stroke-width="4.29167"
+              stroke-linecap="round"
+            />
+            <Path
+              d="M11.6669 38.3337H25.0002"
+              stroke="#7E869E"
+              stroke-width="4.29167"
+              stroke-linecap="round"
+            />
+            <Path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M17.0707 17.1527C16.9642 17.7887 16.9109 18.1067 17.1038 18.3345C17.2967 18.5624 17.6338 18.5624 18.3082 18.5624H25.0002C28.5556 18.5624 31.4377 21.4445 31.4377 24.9999C31.4377 28.5552 28.5556 31.4374 25.0002 31.4374H16.896C16.7695 31.4374 16.6669 31.54 16.6669 31.6665C16.6669 31.7931 16.7695 31.8957 16.896 31.8957H25.0002C28.5556 31.8957 31.4377 34.7779 31.4377 38.3332C31.4377 41.8885 28.5556 44.7707 25.0002 44.7707H16.896C16.7695 44.7707 16.6669 44.8733 16.6669 44.9999C16.6669 45.1264 16.7695 45.229 16.896 45.229H25.0002C28.5556 45.229 31.4377 48.1112 31.4377 51.6665C31.4377 55.2219 28.5556 58.104 25.0002 58.104H18.0233C17.3997 58.104 17.0878 58.104 16.8977 58.3028C16.7076 58.5015 16.7212 58.8087 16.7484 59.4229C16.9226 63.3508 17.4687 65.7738 19.1809 67.486C21.6949 70 25.7411 70 33.8335 70H46.1669C54.2593 70 58.3055 70 60.8195 67.486C63.3335 64.972 63.3335 60.9258 63.3335 52.8333V27.1667C63.3335 19.0742 63.3335 15.028 60.8195 12.514C58.3055 10 54.2593 10 46.1669 10H33.8335C25.7411 10 21.6949 10 19.1809 12.514C18.0335 13.6614 17.4098 15.128 17.0707 17.1527Z"
+              fill="#1443C3"
+            />
+            <Path
+              d="M51.6666 34.9998V24.9998"
+              stroke="#F7F8FF"
+              stroke-width="4.29167"
+              stroke-linecap="round"
+            />
+          </Svg>
           <Text
             style={{
               fontSize: 40,
-              color: 'white',
+              fontWeight: '500',
             }}
           >
-            Welcome to notes
+            Signup
+          </Text>
+
+          <Text
+            style={{
+              fontSize: 20,
+              // color: 'b',
+            }}
+          >
+            Create your account.
           </Text>
         </View>
 
         <View style={style.body}>
           {/*form container*/}
           <View style={style.body_input}>
-            <TextInput
-              placeholder={'username'}
-              onChangeText={usernameInputChange}
-              value={username}
-              style={{
-                backgroundColor: Color.INPUT_BACKGROUND_COLOR,
-                height: 50,
-                fontSize: 20,
-                borderRadius: 20,
-                paddingLeft: 16,
-              }}
-            />
-            <TextInput
-              placeholder={'johndoe@gmail.com'}
-              onChangeText={emailInputChange}
-              value={email}
-              style={{
-                backgroundColor: Color.INPUT_BACKGROUND_COLOR,
-                height: 50,
-                fontSize: 20,
-                borderRadius: 20,
-                paddingLeft: 16,
-                marginTop: 20,
-              }}
-            />
-            <TextInput
-              secureTextEntry={true}
-              onChangeText={passwordInputChange}
-              placeholder={'Password....'}
-              value={password}
-              style={{
-                backgroundColor: Color.INPUT_BACKGROUND_COLOR,
-                height: 50,
-                marginTop: 20,
-                fontSize: 20,
-                borderRadius: 20,
-                paddingLeft: 16,
-              }}
-            />
+            <View>
+              <Text>Username</Text>
+              <TextInput
+                placeholder={'username'}
+                onChangeText={usernameInputChange}
+                value={username}
+                style={{
+                  backgroundColor: Color.INPUT_BACKGROUND_COLOR,
+                  height: 50,
+                  fontSize: 20,
+                  borderRadius: 20,
+                  paddingLeft: 16,
+                  borderWidth: 1,
+                  marginTop: 10,
+                  borderColor: Color.INPUT_BORDER,
+                }}
+              />
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <Text>Email Address</Text>
+              <TextInput
+                placeholder={'johndoe@gmail.com'}
+                onChangeText={emailInputChange}
+                value={email}
+                style={{
+                  backgroundColor: Color.INPUT_BACKGROUND_COLOR,
+                  height: 50,
+                  fontSize: 20,
+                  borderRadius: 20,
+                  paddingLeft: 16,
+                  borderWidth: 1,
+                  marginTop: 10,
+                  borderColor: Color.INPUT_BORDER,
+                }}
+              />
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <Text>Password</Text>
+              <TextInput
+                secureTextEntry={true}
+                onChangeText={passwordInputChange}
+                placeholder={'*********'}
+                value={password}
+                style={{
+                  backgroundColor: Color.INPUT_BACKGROUND_COLOR,
+                  height: 50,
+                  fontSize: 20,
+                  borderRadius: 20,
+                  paddingLeft: 16,
+                  borderWidth: 1,
+                  marginTop: 10,
+                  borderColor: Color.INPUT_BORDER,
+                }}
+              />
+            </View>
+
+            <View style={{ marginTop: 20 }}>
+              <Text>Confirm Password</Text>
+              <TextInput
+                secureTextEntry={true}
+                onChangeText={passwordInputChange}
+                placeholder={'*********'}
+                value={password}
+                style={{
+                  backgroundColor: Color.INPUT_BACKGROUND_COLOR,
+                  height: 50,
+                  fontSize: 20,
+                  borderRadius: 20,
+                  paddingLeft: 16,
+                  borderWidth: 1,
+                  marginTop: 10,
+                  borderColor: Color.INPUT_BORDER,
+                }}
+              />
+            </View>
           </View>
 
           <TouchableOpacity
@@ -164,8 +233,8 @@ export function SignUp(): JSX.Element {
           >
             <Text
               style={{
-                backgroundColor: '#8B4513',
-                borderRadius: 10,
+                backgroundColor: Color.BLUE,
+                borderRadius: 30,
                 height: 60,
                 textAlign: 'center',
                 width: '100%',
@@ -196,23 +265,21 @@ export function SignUp(): JSX.Element {
         </View>
 
         <View style={style.foot}>
-          <Text style={{ textAlign: 'center', color: 'white' }}>
-            You have an account?
-          </Text>
+          <Text style={{ textAlign: 'center' }}>Have an account?</Text>
           <TouchableOpacity onPress={() => navigation.push(NavAction.LOGIN)}>
             <Text
               style={{
-                color: '#8B4513',
+                color: Color.BLUE,
                 textAlign: 'center',
                 verticalAlign: 'middle',
-                marginTop: 5,
               }}
             >
+              {' '}
               Login
             </Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     </Screen>
   );
 }
@@ -221,8 +288,7 @@ const style = StyleSheet.create({
   header: {
     // ...debug('blue'),
     width: '100%',
-    flexBasis: '25%',
-    height: '100%',
+    flexBasis: '20%',
     justifyContent: 'space-evenly',
     padding: 10,
     alignItems: 'center',
@@ -231,24 +297,20 @@ const style = StyleSheet.create({
   body: {
     // ...debug('green'),
     width: '100%',
-    flexBasis: '60%',
-    height: '100%',
+    flexBasis: '70%',
     justifyContent: 'space-around',
     padding: 20,
   },
 
   body_input_text: {},
 
-  body_input: {
-    // ...debug('aqua'),
-    height: 150,
-  },
+  body_input: {},
 
   foot: {
     // ...debug('red'),
     width: '100%',
-    height: '100%',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
   },
 });

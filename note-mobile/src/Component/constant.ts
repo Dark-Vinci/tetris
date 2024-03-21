@@ -15,6 +15,8 @@ export enum Color {
   WHITE = '#FFFFFF',
   CREATE_BACKGROUND = '#C6A788',
   WATER = 'aqua',
+  BLUE = '#221bf5',
+  INPUT_BORDER = '#CBD2E0',
 }
 
 export enum NavAction {
@@ -30,7 +32,7 @@ export const USER_ID = 'USER_ID' as const;
 export const debug = (color: string) => {
   return {
     borderStyle: 'solid',
-    borderWidth: 1,
+    borderWidth: 5,
     borderColor: color,
   } as any;
 };

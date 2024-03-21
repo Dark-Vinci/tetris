@@ -16,17 +16,32 @@ interface screenProps {
 export function Screen({ children }: screenProps): JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>{children}</ScrollView>
+      <ScrollView
+        style={{
+          flex: 1,
+          width: '100%',
+          height: '100%',
+          backgroundColor: Color.WHITE,
+          flexGrow: 1,
+        }}
+        contentContainerStyle={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {children}
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    // ...debug('blue'),
     flex: 1,
-    backgroundColor: Color.LOGIN_COLOR,
+    backgroundColor: Color.WHITE,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingTop:
       Platform.OS === 'android' ? (StatusBar.currentHeight as number) * 2 : 0,
   },
