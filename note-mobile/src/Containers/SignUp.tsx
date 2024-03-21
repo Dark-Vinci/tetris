@@ -12,15 +12,15 @@ import {
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Screen } from '../Component/Screen';
 import {
   AUTH_TOKEN,
   Color,
   NavAction,
   showAlert,
   USER_ID,
-} from '../Component/constant';
-import { navigation } from '../Component/rootNavigation';
+  Screen,
+  navigation,
+} from '@components';
 
 export function SignUp(): JSX.Element {
   const [email, setEmail] = useState('');
@@ -84,13 +84,13 @@ export function SignUp(): JSX.Element {
   return (
     <Screen>
       <ScrollView
-        style={{
-          flex: 1,
-          backgroundColor: Color.LOGIN_COLOR,
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
+      // style={{
+      //   flex: 1,
+      //   backgroundColor: Color.LOGIN_COLOR,
+      //   alignItems: 'center',
+      //   justifyContent: 'space-between',
+      //   width: '100%',
+      // }}
       >
         <View style={style.header}>
           <Image

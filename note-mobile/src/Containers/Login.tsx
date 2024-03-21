@@ -79,13 +79,13 @@ export function Login(): JSX.Element {
   return (
     <Screen>
       <ScrollView
-        style={{
-          flex: 1,
-          backgroundColor: Color.LOGIN_COLOR,
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
+      // style={{
+      //   flex: 1,
+      //   backgroundColor: Color.LOGIN_COLOR,
+      //   alignItems: 'center',
+      //   justifyContent: 'space-between',
+      //   width: '100%',
+      // }}
       >
         <View style={style.header}>
           <Image

@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/go-playground/validator/v10"
 	"reflect"
 	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 func GinContextToContextMiddleware() gin.HandlerFunc {
@@ -65,7 +65,7 @@ func (q fieldError) String() string {
 	sb.WriteString("validation failed on field '" + q.err.Field() + "'")
 	sb.WriteString(", condition: must be " + q.err.ActualTag())
 
-	// Print condition parameters, e.g. oneof=red blue -> { red blue }
+	// Print condition parameters, e.g. one of=red blue -> { red blue }
 	if q.err.Param() != "" {
 		sb.WriteString(" { " + q.err.Param() + " }")
 	}
