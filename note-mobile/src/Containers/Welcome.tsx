@@ -15,7 +15,7 @@ import { Color, navigation } from '@components';
 export function Welcome(): JSX.Element {
   return (
     <LinearGradient
-      colors={['#46d6f0', Color.BLUE]}
+      colors={[Color.AQUA, Color.BLUE]}
       start={[0, 0]}
       end={[1, 1]}
       locations={[0.1, 0.9]}
@@ -65,10 +65,10 @@ export function Welcome(): JSX.Element {
           </Text>
 
           <TouchableOpacity
-            style={styles.bottom_botton}
+            style={styles.bottom_button}
             onPress={() => navigation.push('Login')}
           >
-            <Text style={styles.bottom_botton_text}>Get started</Text>
+            <Text style={styles.bottom_button_text}>Get started</Text>
             <MaterialIcons
               name="arrow-forward"
               size={40}
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  bottom_botton: {
+  bottom_button: {
     // ...debug('green'),
     height: 70,
     width: 300,
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 
-  bottom_botton_text: {
+  bottom_button_text: {
     color: Color.WHITE,
     fontSize: 30,
     // ...debug('green'),

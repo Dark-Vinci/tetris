@@ -17,6 +17,7 @@ export enum Color {
   WATER = 'aqua',
   BLUE = '#221bf5',
   INPUT_BORDER = '#CBD2E0',
+  AQUA = '#46d6f0',
 }
 
 export enum NavAction {

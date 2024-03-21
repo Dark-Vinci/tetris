@@ -33,6 +33,8 @@ function App(): JSX.Element {
 
   const [auth, setAuth] = useState<boolean>(false);
 
+  console.log({ auth });
+
   useEffect(() => {
     AsyncStorage.getItem(AUTH_TOKEN)
       .then((_el) => {
