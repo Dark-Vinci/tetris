@@ -28,6 +28,7 @@ export function SignUp(): JSX.Element {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const emailInputChange = (text: string) => {
     setEmail(text);
@@ -69,13 +70,15 @@ export function SignUp(): JSX.Element {
         return;
       }
 
+      setIsLoading(true);
+
       const response = await axios.post(
         `${Constants.expoConfig?.extra?.baseURL}/user/signup`,
         {
           email: email.toLowerCase(),
           password,
           username,
-          isAdmin: true,
+          isAdmin: false,
         },
       );
 
@@ -88,6 +91,8 @@ export function SignUp(): JSX.Element {
       navigation.push(NavAction.HOME);
     } catch (e) {
       showAlert('something went wrong');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -254,6 +259,7 @@ export function SignUp(): JSX.Element {
                 color: 'white',
                 fontSize: 20,
                 lineHeight: 60,
+                opacity: isLoading ? 0.5 : 1,
               }}
             >
               Signup

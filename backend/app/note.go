@@ -85,13 +85,13 @@ func (a *App) UpdateNote(ctx *gin.Context, note models.UpdateNoteRequest) (*mode
 	return updated, nil
 }
 
-func (a *App) GetUserNotes(ctx *gin.Context, userID uuid.UUID, page helpers.Page) ([]*models.Note, helpers.PageInfo, error) {
+func (a *App) GetUserNotes(ctx *gin.Context, userID uuid.UUID, page helpers.Page, search string) ([]*models.Note, helpers.PageInfo, error) {
 	requestID := requestid.Get(ctx)
 
 	log := a.logger.With().Str(helpers.LogStrRequestIDLevel, requestID).
 		Str(helpers.LogStrKeyMethod, "app.notes.GetUserNotes").Logger()
 
-	notes, pInfo, err := a.notesRepository.GetAllNote(ctx, models.Note{UserID: userID}, page)
+	notes, pInfo, err := a.notesRepository.GetAllNote(ctx, models.Note{UserID: userID, Title: search}, page)
 	if err != nil {
 		log.Err(err).Msg("something went wrong")
 		return nil, pInfo, err

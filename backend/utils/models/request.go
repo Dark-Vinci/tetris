@@ -5,8 +5,8 @@ import "github.com/google/uuid"
 type (
 	CreateNoteRequest struct {
 		UserID  uuid.UUID `json:"userID" validate:"required,uuid"`
-		Content string    `json:"content" validate:"required"`
-		Title   string    `json:"title" validate:"required"`
+		Content string    `json:"content"`
+		Title   string    `json:"title"`
 	}
 
 	UpdateNoteRequest struct {
@@ -19,7 +19,7 @@ type (
 		Username string `json:"username" validate:"required"`
 		Email    string `json:"email" validate:"required,email"`
 		Password string `json:"password" validate:"required"`
-		IsAdmin  bool   `json:"isAdmin" validate:"required"`
+		IsAdmin  bool   `json:"isAdmin"`
 	}
 
 	LoginRequest struct {

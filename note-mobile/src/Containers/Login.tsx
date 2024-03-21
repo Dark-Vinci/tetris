@@ -11,7 +11,6 @@ import axios from 'axios';
 import { useState } from 'react';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { Svg, Path } from 'react-native-svg';
 
 import {
@@ -148,7 +147,7 @@ export function Login(): JSX.Element {
           </Text>
         </View>
 
-        {/*  MAIN*/}
+        {/*MAIN*/}
         <View style={style.body}>
           <View style={style.body_input}>
             <View>

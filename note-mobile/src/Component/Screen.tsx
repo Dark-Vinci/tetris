@@ -37,12 +37,11 @@ export function Screen({ children }: screenProps): JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
-    // ...debug('blue'),
     flex: 1,
     backgroundColor: Color.WHITE,
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop:
-      Platform.OS === 'android' ? (StatusBar.currentHeight as number) * 2 : 0,
+      Platform.OS === 'android' ? (StatusBar.currentHeight as number) : 0,
   },
 });

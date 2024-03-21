@@ -1,15 +1,20 @@
-import { FlatList, Text } from 'react-native';
+import { Dimensions, FlatList, View, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState, JSX } from 'react';
 import axios from 'axios';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AntDesign } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import {
   HomeHeader,
   NoteListItem,
-  Screen,
   AUTH_TOKEN,
   showAlert,
+  Color,
+  navigation,
+  NavAction,
+  Empty,
 } from '@components';
 
 interface listType {
@@ -21,14 +26,18 @@ interface listType {
 export function Home(): JSX.Element {
   const [search, setSearch] = useState<string>('');
   const [data, setData] = useState<listType[]>([]);
+  const [isSearch, setIsSearch] = useState<boolean>(false);
 
   const handleInputHandler = (text: string) => {
     setSearch(text);
   };
 
-  const fetchNotes = async () => {
+  const fetchNotes = async (searchText = '', isSearch: boolean) => {
     try {
+      setIsSearch(isSearch);
       const authToken = await AsyncStorage.getItem(AUTH_TOKEN);
+
+      // setIsSearch(isSearch);
 
       if (!authToken) {
         showAlert('something is wrong');
@@ -36,7 +45,7 @@ export function Home(): JSX.Element {
       }
 
       const response = await axios.get(
-        `${Constants.expoConfig?.extra?.baseURL}/note/all`,
+        `${Constants.expoConfig?.extra?.baseURL}/note/mine?search=${searchText}`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -50,40 +59,84 @@ export function Home(): JSX.Element {
     }
   };
 
+  const searchNotes = async () => {
+    fetchNotes(search, true).then();
+  };
+
   useEffect(() => {
-    fetchNotes().then();
+    fetchNotes('', false).then();
   }, []);
 
-  return (
-    <Screen>
-      <HomeHeader inputChange={handleInputHandler} search={search} />
+  if (data.length === 0 && !isSearch) {
+    return <Empty />;
+  }
 
-      {data.length < 1 ? (
-        <Text>No note created....</Text>
-      ) : (
-        <FlatList
-          data={data}
-          onRefresh={fetchNotes}
-          refreshing={false}
-          renderItem={({ item }) => {
-            return (
-              <NoteListItem
-                id={item.id}
-                createdAt={item.createdAt}
-                title={item.title}
-              />
-            );
-          }}
-          keyExtractor={(item) => `${Math.random()}${item.id}`}
+  return (
+    <LinearGradient
+      colors={[Color.GRADIENT_COLOR, Color.WHITE]}
+      style={{
+        width: '100%',
+        height: Dimensions.get('window').height,
+        justifyContent: 'center',
+        alignItems: 'center',
+        // ...debug('blue'),
+        flex: 1,
+      }}
+    >
+      <TouchableOpacity
+        style={{
+          position: 'absolute',
+          bottom: 40,
+          right: 40,
+          zIndex: 20,
+          height: 65,
+          width: 65,
+        }}
+        onPress={() => {
+          navigation.push(NavAction.CREATE);
+        }}
+      >
+        <View
           style={{
-            width: '90%',
-            height: 150,
-            flex: 1,
-            margin: 5,
+            backgroundColor: 'blue',
+            height: 65,
+            width: 65,
+            borderRadius: 50,
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
-    </Screen>
+        >
+          <AntDesign name="plus" size={35} color={Color.WHITE} />
+        </View>
+      </TouchableOpacity>
+
+      <HomeHeader
+        inputChange={handleInputHandler}
+        search={search}
+        onSearch={searchNotes}
+      />
+
+      <FlatList
+        data={data}
+        renderItem={({ item }) => {
+          return (
+            <NoteListItem
+              id={item.id}
+              createdAt={item.createdAt}
+              title={item.title}
+            />
+          );
+        }}
+        keyExtractor={(item) => `${Math.random()}${item?.id}`}
+        style={{
+          width: '90%',
+          height: 'auto',
+          flex: 1,
+          margin: 5,
+          // ...debug('yellow'),
+        }}
+        showsVerticalScrollIndicator={false}
+      />
+    </LinearGradient>
   );
 }

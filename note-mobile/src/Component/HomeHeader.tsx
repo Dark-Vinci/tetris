@@ -7,45 +7,49 @@ import {
 } from 'react-native';
 import React, { JSX } from 'react';
 import { Fontisto } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
+// import { Ionicons } from '@expo/vector-icons';
 
-import { Color, NavAction } from './constant';
-import { navigation } from './rootNavigation';
+import { Color } from './constant';
+// import { navigation } from './rootNavigation';
 
 interface HomeHeaderProps {
   readonly search: string;
+  onSearch(): void;
   inputChange: (text: string) => void;
 }
 
 export function HomeHeader({
   search,
   inputChange,
+  onSearch,
 }: HomeHeaderProps): JSX.Element {
   return (
     <View style={style.container}>
-      <View style={style.container_top}>
-        <Text style={style.container_top_text}>Notes</Text>
-
-        <TouchableOpacity onPress={() => navigation.push(NavAction.CREATE)}>
-          <Ionicons
-            name="add-circle-outline"
-            size={40}
-            color={Color.ADD_ICON_COLOR}
-          />
-        </TouchableOpacity>
-      </View>
+      <Text style={style.container_top_text}>Notes</Text>
 
       <View style={style.container_bottom}>
         <TextInput
           value={search}
-          placeholder="Search notes..."
+          placeholder="Search..."
           onChangeText={inputChange}
           style={style.container_bottom_search}
           placeholderTextColor={Color.PLACEHOLDER_COLOR}
+          autoCapitalize="none"
         />
 
-        <TouchableOpacity>
-          <Fontisto name="search" size={40} color={Color.SEARCH_ICON_COLOR} />
+        <TouchableOpacity onPress={onSearch}>
+          <View
+            style={{
+              borderRadius: 100,
+              width: 50,
+              height: 50,
+              backgroundColor: Color.WHITE,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Fontisto name="search" size={25} color={Color.SEARCH_ICON_COLOR} />
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -56,9 +60,10 @@ const style = StyleSheet.create({
   container: {
     height: 200,
     width: '100%',
-    backgroundColor: Color.LOGIN_COLOR,
     justifyContent: 'center',
+    alignItems: 'center',
     padding: 10,
+    marginTop: 10,
   },
 
   container_bottom: {
@@ -66,7 +71,9 @@ const style = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    height: 50,
+    height: 52,
+    borderRadius: 50,
+    backgroundColor: Color.SEARCH_BG_COLOR,
   },
 
   container_bottom_search: {
@@ -76,7 +83,7 @@ const style = StyleSheet.create({
     borderRadius: 30,
     textAlign: 'left',
     paddingLeft: 20,
-    backgroundColor: '#e6e6eb',
+    // backgroundColor: '#e6e6eb',
     fontSize: 20,
   },
 
@@ -91,5 +98,9 @@ const style = StyleSheet.create({
   container_top_text: {
     fontSize: 50,
     fontWeight: 'bold',
+    width: '100%',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: Color.HEADER_TEXT_COLOR,
   },
 });

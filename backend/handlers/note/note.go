@@ -65,7 +65,7 @@ func (u *noteHandler) getUserNotes() gin.HandlerFunc {
 
 		pages := helpers.ParsePageParams(c)
 
-		res, pageInfo, err := u.app.GetUserNotes(c, uID, pages)
+		res, pageInfo, err := u.app.GetUserNotes(c, uID, pages, "")
 
 		models.OkResponse(c, http.StatusOK, "paginated user notes fetched successfully!", helpers.PaginatedResponse{
 			Items: res,
@@ -201,6 +201,8 @@ func (u *noteHandler) getMyNotes() gin.HandlerFunc {
 		handlerNameAccount := c.FullPath()
 		var err error
 
+		var search = c.Query("search")
+
 		pages := helpers.ParsePageParams(c)
 
 		userID, ok := c.Get(middlewares.UserIDInContext)
@@ -229,7 +231,7 @@ func (u *noteHandler) getMyNotes() gin.HandlerFunc {
 			return
 		}
 
-		res, pageInfo, err := u.app.GetUserNotes(c, uID, pages)
+		res, pageInfo, err := u.app.GetUserNotes(c, uID, pages, search)
 
 		models.OkResponse(c, http.StatusOK, "paginated user notes fetched successfully!", helpers.PaginatedResponse{
 			Items: res,

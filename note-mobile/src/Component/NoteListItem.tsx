@@ -1,7 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import React, { JSX } from 'react';
 
-import { Color, NavAction } from './constant';
+import { bgColors, colors, generateRandom, NavAction } from './constant';
 import { navigation } from './rootNavigation';
 
 interface NoteListItemProps {
@@ -15,43 +15,47 @@ export function NoteListItem({
   createdAt,
   id,
 }: NoteListItemProps): JSX.Element {
-  console.log({ id });
+  const ind = generateRandom();
+
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate(NavAction.CREATE, { id })}
+      onPress={() =>
+        navigation.navigate(NavAction.CREATE, { id, bgColor: bgColors[ind] })
+      }
     >
-      <View style={style.container}>
-        <Text style={style.title}>{title}</Text>
-        <Text style={style.createdAt}>
-          {new Date(createdAt).toDateString()}
+      <View
+        style={{
+          height: 150,
+          flex: 1,
+          flexBasis: '80%',
+          borderRadius: 20,
+          justifyContent: 'space-evenly',
+          alignItems: 'flex-start',
+          backgroundColor: bgColors[ind],
+          marginBottom: 10,
+          paddingLeft: 10,
+        }}
+      >
+        <Text
+          style={{
+            color: colors[ind],
+            fontWeight: 'bold',
+            fontSize: 35,
+          }}
+        >
+          {title}
+        </Text>
+        <Text
+          style={{
+            color: colors[ind],
+            fontWeight: 'normal',
+            fontSize: 20,
+          }}
+        >
+          {new Date(createdAt).getFullYear()} | {new Date(createdAt).getMonth()}{' '}
+          | {new Date(createdAt).getDay()}
         </Text>
       </View>
     </TouchableOpacity>
   );
 }
-
-const style = StyleSheet.create({
-  container: {
-    height: 100,
-    flex: 1,
-    flexBasis: '80%',
-    borderRadius: 20,
-    justifyContent: 'space-evenly',
-    alignItems: 'flex-start',
-    backgroundColor: Color.THICK,
-    marginBottom: 10,
-    paddingLeft: 10,
-  },
-
-  title: {
-    color: Color.WHITE,
-    fontWeight: 'bold',
-    fontSize: 35,
-  },
-
-  createdAt: {
-    color: Color.GLOBAL_BACKGROUND,
-    fontWeight: 'normal',
-    fontSize: 20,
-  },
-});

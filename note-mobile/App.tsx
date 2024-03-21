@@ -2,16 +2,15 @@ import {
   createStackNavigator,
   StackNavigationOptions,
 } from '@react-navigation/stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
-import React, { JSX, useEffect, useState } from 'react';
+import React, { JSX } from 'react';
 
-import { Home, Create, Login, SignUp } from '@containers';
-import { navigationRef, AUTH_TOKEN } from '@components';
-import { Welcome } from './src/Containers/Welcome';
+import { Home, Create, Login, SignUp, Welcome, Splash } from '@containers';
+import { navigationRef } from '@components';
 
 interface CreateParam {
   id: string;
+  bgColor: string;
 }
 
 export type NoteStackParamList = {
@@ -20,6 +19,7 @@ export type NoteStackParamList = {
   Home: undefined;
   Welcome: undefined;
   Create: CreateParam;
+  Splash: undefined;
 };
 
 const RootStack = createStackNavigator<NoteStackParamList>();
@@ -31,27 +31,13 @@ function App(): JSX.Element {
     cardStyle: {},
   };
 
-  const [auth, setAuth] = useState<boolean>(false);
-
-  console.log({ auth });
-
-  useEffect(() => {
-    AsyncStorage.getItem(AUTH_TOKEN)
-      .then((_el) => {
-        setAuth(true);
-      })
-      .catch((_el) => {
-        setAuth(false);
-      });
-  }, []);
-
   return (
     <NavigationContainer ref={navigationRef}>
       <RootStack.Navigator
-        // initialRouteName={auth ? 'Home' : 'Login'}
-        initialRouteName="Welcome"
+        initialRouteName="Login"
         screenOptions={navigationOptions}
       >
+        <RootStack.Screen name="Splash" component={Splash} />
         <RootStack.Screen name="SignUp" component={SignUp} />
         <RootStack.Screen name="Login" component={Login} />
         <RootStack.Screen name="Home" component={Home} />

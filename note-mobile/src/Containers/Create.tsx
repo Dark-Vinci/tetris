@@ -9,12 +9,12 @@ import {
   StatusBar,
   View,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Constants from 'expo-constants';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 import {
   AUTH_TOKEN,
@@ -23,12 +23,14 @@ import {
   showAlert,
   USER_ID,
   navigation,
+  bgColors,
 } from '@components';
 
 type CreateRouteProp = RouteProp<
   {
     Create: {
       id: string;
+      bgColor: string;
     };
   },
   'Create'
@@ -38,6 +40,7 @@ type CreateNavigationProp = StackNavigationProp<
   {
     Create: {
       id: string;
+      bgColor: string;
     };
   },
   'Create'
@@ -56,7 +59,7 @@ export function Create({ route }: CreateProps): JSX.Element {
   const [date, setDate] = useState<Date>(new Date());
 
   const id = route?.params?.id;
-  const isNew = !id;
+  const bgColor = route?.params?.bgColor || bgColors[0];
 
   const fetchNote = useCallback(async () => {
     try {
@@ -105,6 +108,11 @@ export function Create({ route }: CreateProps): JSX.Element {
 
   const onSaveHandler = async () => {
     try {
+      if (!title && !main) {
+        navigation.push(NavAction.HOME);
+        return;
+      }
+
       const userID = await AsyncStorage.getItem(USER_ID);
 
       if (!userID) {
@@ -152,12 +160,7 @@ export function Create({ route }: CreateProps): JSX.Element {
           break;
       }
 
-      if (isNew) {
-        navigation.push(NavAction.HOME);
-        return;
-      }
-
-      navigation.goBack();
+      navigation.push(NavAction.HOME);
     } catch (e) {
       showAlert('something went wrong');
     }
@@ -170,10 +173,22 @@ export function Create({ route }: CreateProps): JSX.Element {
   }, [id, main, titleSet]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={{
+        paddingTop:
+          Platform.OS === 'android'
+            ? (StatusBar.currentHeight as number) * 2
+            : 0,
+        flex: 1,
+        backgroundColor: bgColor,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+      }}
+    >
       <View style={styles.container_top}>
         <Text style={styles.container_top_text}>
-          {new Date(date).toDateString()}
+          {new Date(date).getFullYear()} | {new Date(date).getMonth()} |{' '}
+          {new Date(date).getDay()}
         </Text>
         <View style={styles.container_top_title}>
           <TextInput
@@ -183,13 +198,31 @@ export function Create({ route }: CreateProps): JSX.Element {
             style={{
               height: '100%',
               flex: 1,
-              fontSize: 30,
+              fontSize: 35,
               color: Color.WHITE,
+              fontWeight: '800',
             }}
           />
 
           <TouchableOpacity onPress={onSaveHandler}>
-            <MaterialIcons name="save" size={35} color={Color.WATER} />
+            <View
+              style={{
+                width: 60,
+                height: 60,
+                borderRadius: 50,
+                borderWidth: 1,
+                borderColor: Color.WHITE,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <FontAwesome5
+                name="check"
+                size={24}
+                color={Color.WHITE}
+                style={{ fontWeight: 'normal' }}
+              />
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -208,15 +241,6 @@ export function Create({ route }: CreateProps): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop:
-      Platform.OS === 'android' ? (StatusBar.currentHeight as number) * 2 : 0,
-    flex: 1,
-    backgroundColor: Color.CREATE_BACKGROUND,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-
   container_top: {
     // ...debug('green'),
     width: '100%',
