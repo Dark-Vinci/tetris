@@ -15,6 +15,15 @@ type Env struct {
 }
 
 func NewEnv() *Env {
+	//JUST FOR THE DEV
+	//os.Setenv("DB_PASSWORD", "docker")
+	//os.Setenv("DB_NAME", "tetris")
+	//os.Setenv("DB_USERNAME", "docker")
+	//os.Setenv("DB_HOST", "localhost")
+	//os.Setenv("DB_PORT", "5420")
+	//os.Setenv("JWT_SIGNING_SECRET", "tomiwa")
+	//os.Setenv("PORT", "8080")
+
 	dbPass := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 	dbUsername := os.Getenv("DB_USERNAME")
