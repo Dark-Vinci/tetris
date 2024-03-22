@@ -1,4 +1,9 @@
-import { Dimensions, View, TouchableOpacity } from 'react-native';
+import {
+  Dimensions,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import React, { useEffect, useState, JSX } from 'react';
 import axios from 'axios';
 import Constants from 'expo-constants';
@@ -15,6 +20,8 @@ import {
   NavAction,
   Empty,
   CardList,
+  colors,
+  generateRandom,
 } from '@components';
 
 export interface listType {
@@ -27,6 +34,7 @@ export function Home(): JSX.Element {
   const [search, setSearch] = useState<string>('');
   const [data, setData] = useState<listType[]>([]);
   const [isSearch, setIsSearch] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputHandler = (text: string) => {
     setSearch(text);
@@ -42,6 +50,8 @@ export function Home(): JSX.Element {
         return;
       }
 
+      setIsLoading(true);
+
       const response = await axios.get(
         `${Constants.expoConfig?.extra?.baseURL}/note/mine?search=${searchText}`,
         {
@@ -54,6 +64,8 @@ export function Home(): JSX.Element {
       setData(response.data.data.items);
     } catch (e) {
       showAlert('something went wrong');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -66,6 +78,10 @@ export function Home(): JSX.Element {
   useEffect(() => {
     fetchNotes('', false).then();
   }, []);
+
+  if (isLoading) {
+    <ActivityIndicator size="small" color={colors[generateRandom()]} />;
+  }
 
   if (data.length === 0 && !isSearch) {
     return <Empty />;

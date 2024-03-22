@@ -7,7 +7,7 @@ import { AUTH_TOKEN, NavAction, navigation, Screen } from '@components';
 
 export function Splash(): JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
-  const [auth, setAuth] = useState<boolean>(false);
+  const [auth, setAuth] = useState<string>('');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -19,17 +19,17 @@ export function Splash(): JSX.Element {
 
   useEffect(() => {
     if (!isLoading) {
-      navigation.push(auth ? NavAction.HOME : NavAction.SIGN_UP);
+      navigation.push(auth ? NavAction.HOME : NavAction.WELCOME);
     }
   }, [isLoading]);
 
   useEffect(() => {
     AsyncStorage.getItem(AUTH_TOKEN)
       .then((_el) => {
-        setAuth(true);
+        setAuth(_el!);
       })
       .catch((_el) => {
-        setAuth(false);
+        setAuth('');
       });
   }, []);
 

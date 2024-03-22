@@ -162,6 +162,7 @@ export function Create({ route }: CreateProps): JSX.Element {
 
       navigation.push(NavAction.HOME);
     } catch (e) {
+      console.log({ e });
       showAlert('something went wrong');
     }
   };

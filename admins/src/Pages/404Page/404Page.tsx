@@ -1,7 +1,7 @@
 import { JSX } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import style from './404Page.module.scss';
-import { NavLink } from 'react-router-dom';
 
 export function Page404(): JSX.Element {
   return (

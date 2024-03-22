@@ -24,7 +24,7 @@ export enum Color {
 }
 
 export function generateRandom(): number {
-  return Math.floor(Math.random() * 9);
+  return Math.floor(Math.random() * 13);
 }
 
 export const bgColors = [
@@ -38,6 +38,10 @@ export const bgColors = [
   'rgba(176, 4, 130, 0.26)',
   'rgba(176, 4, 116, 0.26)',
   'rgba(176, 53, 20, 0.26)',
+  'rgba(0,111,76, 0.26)',
+  'rgba(0,0,0, 0.26)',
+  'rgba(0,76,255, 0.26)',
+  'rgba(255,146,0, 0.26)',
 ];
 
 export const colors = [
@@ -51,6 +55,10 @@ export const colors = [
   'rgba(176, 4, 130, 1)',
   'rgba(176, 4, 116, 1)',
   'rgba(176, 53, 20, 1)',
+  'rgba(0,111,76, 1)',
+  'rgba(0,76,255, 1)',
+  'rgba(0,0,0, 1)',
+  'rgba(255,146,0, 1)',
 ];
 
 export enum NavAction {
