@@ -7,4 +7,10 @@ export default {
   },
   owner: 'voidi',
   slug: 'notes',
+  android: {
+    package: 'com.melonny.notessk',
+  },
+  ios: {
+    bundleIdentifier: 'com.melonny.notessk',
+  },
 };

@@ -2,7 +2,6 @@ package app
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/gin-contrib/requestid"
@@ -77,8 +76,6 @@ func (a *App) CreateUser(ctx *gin.Context, userRequest models.CreateUserRequest)
 
 func (a *App) Login(ctx *gin.Context, loginReq models.LoginRequest) (*models.User, error) {
 	requestID := requestid.Get(ctx)
-
-	fmt.Printf("%+v", loginReq)
 
 	log := a.logger.With().Str(helpers.LogStrRequestIDLevel, requestID).
 		Str(helpers.LogStrKeyMethod, "app.user.Login").Logger()
