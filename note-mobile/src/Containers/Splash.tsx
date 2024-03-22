@@ -24,6 +24,14 @@ export function Splash(): JSX.Element {
   }, [isLoading]);
 
   useEffect(() => {
+    AsyncStorage.removeItem(AUTH_TOKEN)
+      .then((_el) => {
+        // setAuth(_el!);
+      })
+      .catch((_el) => {
+        // setAuth('');
+      });
+
     AsyncStorage.getItem(AUTH_TOKEN)
       .then((_el) => {
         setAuth(_el!);

@@ -30,7 +30,7 @@ func New(z zerolog.Logger, env models.Env) *Store {
 	HOST := env.DBHOST
 
 	db, err := gorm.Open(
-		postgres.Open(fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
+		postgres.Open(fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=require",
 			HOST,
 			PORT,
 			env.DBUsername,
@@ -40,7 +40,7 @@ func New(z zerolog.Logger, env models.Env) *Store {
 		&gorm.Config{},
 	)
 	if err != nil {
-		z.Fatal().Err(err).Msg("could not connect to the DB")
+		z.Fatal().Err(err).Msgf("could not connect to the DB %+v", err.Error())
 		panic(err)
 	}
 

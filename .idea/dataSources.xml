@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5420/postgres</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="defaultdb@tetris-tetris.a.aivencloud.com" uuid="fb9f124c-ae4a-47bf-a648-955d01af9c60">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://tetris-tetris.a.aivencloud.com:27747/defaultdb</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
