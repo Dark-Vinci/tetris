@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "note-mobile",
-    "slug": "note-mobile",
+    "name": "notes",
+    "slug": "notes",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
@@ -20,6 +20,12 @@
     },
     "web": {
       "favicon": "./assets/logo.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b6978726-38d0-49d4-a3aa-faad0adaa8f7"
+      }
+    },
+    "owner": "voidi"
   }
 }
