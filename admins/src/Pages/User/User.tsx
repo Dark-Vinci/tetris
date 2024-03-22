@@ -1,6 +1,7 @@
 import { JSX, useEffect, useState, MouseEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { ClipLoader } from 'react-spinners';
 
 import style from './User.module.scss';
 import { UserDetails } from '@containers';
@@ -8,6 +9,7 @@ import { Modal, Next, NoteModal, userNote, UserNotes } from '@components';
 import {
   AUTH_TOKEN,
   bgColors,
+  Color,
   colors,
   formatToken,
   generateRandom,
@@ -33,7 +35,6 @@ export function User(): JSX.Element {
     createdAt: new Date(),
     content: '',
   });
-
   const [notes, setNotes] = useState([]);
   const [user, setUser] = useState<userType>({
     id: '',
@@ -44,7 +45,6 @@ export function User(): JSX.Element {
   const [error, setError] = useState('');
   const [i, setI] = useState<number>(-1);
   const [loading, setLoading] = useState<boolean>(false);
-  const [authToken, setAuthToken] = useState('');
 
   useEffect(() => {
     setI(generateRandom());
@@ -55,9 +55,7 @@ export function User(): JSX.Element {
 
     const token = localStorage.getItem(AUTH_TOKEN);
 
-    if (token) {
-      setAuthToken(() => token);
-    } else {
+    if (!token) {
       nav('/login');
     }
 
@@ -76,7 +74,6 @@ export function User(): JSX.Element {
 
   const fetchUserNotes = async (token: string) => {
     try {
-      console.log({ notes, user, loading, error, authToken });
       setLoading(true);
 
       const response = await axios.get(
@@ -93,7 +90,7 @@ export function User(): JSX.Element {
 
       setNotes(response.data.data.items);
     } catch (e) {
-      setError('abc');
+      setError('something went wrong');
     } finally {
       setLoading(false);
     }
@@ -114,11 +111,51 @@ export function User(): JSX.Element {
 
       setUser(response.data.data);
     } catch (e) {
-      setError('abc');
+      setError('something went wrong');
     } finally {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ClipLoader
+          color={Color.MINOR}
+          loading={loading}
+          size={150}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div
+        style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <p style={{ fontSize: '37px', fontWeight: 'bold', color: 'red' }}>
+          {error}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className={style.container}>

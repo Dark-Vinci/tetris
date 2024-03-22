@@ -1,11 +1,18 @@
 import { ChangeEvent, JSX, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ClipLoader } from 'react-spinners';
 
 import style from './Users.module.scss';
 import { UserHeader } from '@containers';
 import { Next, UsersTable } from '@components';
-import { AUTH_TOKEN, formatToken, REACT_APP_API_ENDPOINT, SIZE } from '@utils';
+import {
+  AUTH_TOKEN,
+  Color,
+  formatToken,
+  REACT_APP_API_ENDPOINT,
+  SIZE,
+} from '@utils';
 
 export function Users(): JSX.Element {
   const [users, setUsers] = useState([]);
@@ -30,7 +37,6 @@ export function Users(): JSX.Element {
   const [authToken, setAuthToken] = useState<string>('');
 
   useEffect(() => {
-    console.log({ error, isLoading });
     const token = localStorage.getItem(AUTH_TOKEN);
 
     if (token) {
@@ -48,9 +54,6 @@ export function Users(): JSX.Element {
 
   const fetchAnalytics = async (token: string) => {
     try {
-      console.log({ search, authToken });
-      setIsLoading(true);
-
       const response = await axios.get(
         `${REACT_APP_API_ENDPOINT}/user/analytics`,
         {
@@ -61,9 +64,12 @@ export function Users(): JSX.Element {
         },
       );
 
-      setAnalytics(response.data.data);
+      setAnalytics({
+        ...response.data.data,
+        notePerUser: response.data.data.notePerUser.toFixed(2),
+      });
     } catch (e) {
-      setError('abc');
+      setError('unable to fetch user analytics');
     }
   };
 
@@ -92,6 +98,46 @@ export function Users(): JSX.Element {
       setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ClipLoader
+          color={Color.MINOR}
+          loading={isLoading}
+          size={150}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div
+        style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <p style={{ fontSize: '37px', fontWeight: 'bold', color: 'red' }}>
+          {error}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className={style.container}>

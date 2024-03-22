@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import React, { JSX } from 'react';
 
 import { Home, Create, Login, SignUp, Welcome, Splash } from '@containers';
-import { navigationRef } from '@components';
+import { NavAction, navigationRef } from '@components';
 
 interface CreateParam {
   id: string;
@@ -34,15 +34,15 @@ function App(): JSX.Element {
   return (
     <NavigationContainer ref={navigationRef}>
       <RootStack.Navigator
-        initialRouteName="Splash"
+        initialRouteName={NavAction.SPLASH}
         screenOptions={navigationOptions}
       >
-        <RootStack.Screen name="Splash" component={Splash} />
-        <RootStack.Screen name="SignUp" component={SignUp} />
-        <RootStack.Screen name="Login" component={Login} />
-        <RootStack.Screen name="Home" component={Home} />
-        <RootStack.Screen name="Create" component={Create} />
-        <RootStack.Screen name="Welcome" component={Welcome} />
+        <RootStack.Screen name={NavAction.SPLASH} component={Splash} />
+        <RootStack.Screen name={NavAction.SIGN_UP} component={SignUp} />
+        <RootStack.Screen name={NavAction.LOGIN} component={Login} />
+        <RootStack.Screen name={NavAction.HOME} component={Home} />
+        <RootStack.Screen name={NavAction.CREATE} component={Create} />
+        <RootStack.Screen name={NavAction.WELCOME} component={Welcome} />
       </RootStack.Navigator>
     </NavigationContainer>
   );

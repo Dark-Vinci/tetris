@@ -58,6 +58,8 @@ export enum NavAction {
   SIGN_UP = 'SignUp',
   CREATE = 'Create',
   HOME = 'Home',
+  SPLASH = 'Splash',
+  WELCOME = 'Welcome',
 }
 
 export const AUTH_TOKEN = 'AUTH_TOKEN' as const;
