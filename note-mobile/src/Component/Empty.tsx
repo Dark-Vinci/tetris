@@ -10,6 +10,7 @@ import {
   LinearGradient,
   Stop,
 } from 'react-native-svg';
+
 import { Color, NavAction } from './constant';
 import { navigation } from './rootNavigation';
 

@@ -1,4 +1,4 @@
-import { Dimensions, FlatList, View, TouchableOpacity } from 'react-native';
+import { Dimensions, View, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState, JSX } from 'react';
 import axios from 'axios';
 import Constants from 'expo-constants';
@@ -8,16 +8,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import {
   HomeHeader,
-  NoteListItem,
   AUTH_TOKEN,
   showAlert,
   Color,
   navigation,
   NavAction,
   Empty,
+  CardList,
 } from '@components';
 
-interface listType {
+export interface listType {
   readonly title: string;
   readonly createdAt: string;
   readonly id: string;
@@ -36,8 +36,6 @@ export function Home(): JSX.Element {
     try {
       setIsSearch(isSearch);
       const authToken = await AsyncStorage.getItem(AUTH_TOKEN);
-
-      // setIsSearch(isSearch);
 
       if (!authToken) {
         showAlert('something is wrong');
@@ -61,6 +59,8 @@ export function Home(): JSX.Element {
 
   const searchNotes = async () => {
     fetchNotes(search, true).then();
+
+    setSearch('');
   };
 
   useEffect(() => {
@@ -116,27 +116,7 @@ export function Home(): JSX.Element {
         onSearch={searchNotes}
       />
 
-      <FlatList
-        data={data}
-        renderItem={({ item }) => {
-          return (
-            <NoteListItem
-              id={item.id}
-              createdAt={item.createdAt}
-              title={item.title}
-            />
-          );
-        }}
-        keyExtractor={(item) => `${Math.random()}${item?.id}`}
-        style={{
-          width: '90%',
-          height: 'auto',
-          flex: 1,
-          margin: 5,
-          // ...debug('yellow'),
-        }}
-        showsVerticalScrollIndicator={false}
-      />
+      <CardList data={data} />
     </LinearGradient>
   );
 }

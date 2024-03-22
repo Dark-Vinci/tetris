@@ -69,7 +69,6 @@ export function Login(): JSX.Element {
 
       navigation.push(NavAction.HOME);
     } catch (e) {
-      console.log({ e: JSON.stringify(e) });
       showAlert('something went wrong');
     } finally {
       setIsLoading(false);
@@ -90,13 +89,7 @@ export function Login(): JSX.Element {
       >
         {/*<Text> CENTER </Text>*/}
         <View style={style.header}>
-          <Svg
-            // xmlns="http://www.w3.org/2000/svg"
-            width="80"
-            height="80"
-            viewBox="0 0 80 80"
-            fill="none"
-          >
+          <Svg width="80" height="80" viewBox="0 0 80 80" fill="none">
             <Path
               d="M11.6669 24.9998H25.0002"
               stroke="#7E869E"

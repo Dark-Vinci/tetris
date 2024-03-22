@@ -34,7 +34,7 @@ function App(): JSX.Element {
   return (
     <NavigationContainer ref={navigationRef}>
       <RootStack.Navigator
-        initialRouteName="Login"
+        initialRouteName="Splash"
         screenOptions={navigationOptions}
       >
         <RootStack.Screen name="Splash" component={Splash} />

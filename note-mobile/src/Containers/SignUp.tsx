@@ -152,7 +152,6 @@ export function SignUp(): JSX.Element {
           <Text
             style={{
               fontSize: 20,
-              // color: 'b',
             }}
           >
             Create your account.
