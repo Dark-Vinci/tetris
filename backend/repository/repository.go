@@ -26,13 +26,10 @@ type Store struct {
 func New(z zerolog.Logger, env models.Env) *Store {
 	log := z.With().Str("PACKAGE", packageName).Logger()
 
-	PORT := env.DBPort
-	HOST := env.DBHOST
-
 	db, err := gorm.Open(
 		postgres.Open(fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=require",
-			HOST,
-			PORT,
+			env.DBHOST,
+			env.DBPort,
 			env.DBUsername,
 			env.DBName,
 			env.DBPassword,
